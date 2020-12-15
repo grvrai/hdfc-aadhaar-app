@@ -5,6 +5,7 @@
 var Constants = {	
 	// Server config
 	domain: "https://staging.peakengage.com",
+	aadhaar_domain: "https://aadhaar.peakengage.com",
 	serialno: "",
     // apns_push_id: 'web.com.peakengage',
     app: 'website',

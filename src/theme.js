@@ -23,6 +23,12 @@ const theme = createMuiTheme({
     },
   },
   overrides: {
+    MuiContainer: {
+      root: {
+        paddingTop: '56px',
+        paddingBottom: '56px',
+      }
+    },
     MuiPaper: {
       root: {
         // padding: '20px 10px',

@@ -1,4 +1,5 @@
 import Constants from '../constants'
+import AuthService from './../services/auth-service'
 
 export function fetchData(type, url, data, headers) {
     var init = {
@@ -8,12 +9,20 @@ export function fetchData(type, url, data, headers) {
         headers: {
             "Accept": 'application/json',
             "Content-Type": 'application/json',
-            "Authorization": `Token ${Constants.token}`
+            // "Authorization": `Token ${Constants.token}`
         },
         method: type // *GET, POST, PUT, DELETE, etc.
         // mode: 'cors', // no-cors, cors, *same-origin
         // redirect: 'follow', // manual, *follow, error
         // referrer: 'no-referrer', // *client, no-referrer
+    }
+
+    console.log('fetchData');
+    console.log(AuthService.isLoggedIn());
+    if(Constants.token) {
+        // Constants.token 
+        console.log( AuthService.getUserData())
+        init.headers['Authorization'] = `Token ${Constants.token}`
     }
 
     if (headers) {

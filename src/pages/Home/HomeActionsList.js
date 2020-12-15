@@ -16,8 +16,7 @@ import GroupAddIcon from '@material-ui/icons/GroupAdd';
 const useStyles = makeStyles((theme) => ({
     root: {
       width: '100%',
-    //   maxWidth: 360,
-        marginTop: '1rem',
+      marginTop: '1rem',
       backgroundColor: theme.palette.background.paper,
     },
   }));

@@ -48,7 +48,6 @@ class HomeView extends React.Component {
 
   componentDidMount() {
     document.addEventListener('onSubscriptionChange', this.handlePermissionChange);
-
     navigator.serviceWorker.addEventListener('message', this.handlePushReceived);
   }
 

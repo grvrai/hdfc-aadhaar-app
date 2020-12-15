@@ -30,8 +30,7 @@ export default function BottomNav() {
       }}
       showLabels
       className={classes.root}
-      position="fixed"
-    >
+      position="fixed">
       {path ? <Redirect to={path} /> : ''}
       <BottomNavigationAction label="Home" value="/" icon={<HomeIcon />} />
       <BottomNavigationAction label="Notifications" value="/notifications" icon={<NotificationsIcon />} />

@@ -4,6 +4,15 @@ import Constants from '../constants'
 class AuthService {
   constructor() {
     this._isLoggedIn = localStorage.getItem('user_data') ? true : false;
+    if(this.isLoggedIn) {
+      let user_data = localStorage.getItem('user_data')
+      if (user_data) {
+        user_data = JSON.parse(user_data);
+        // this.user_data = user_data;
+        // return user_data;
+        Constants.token = user_data.token;
+      }
+    }
   }
 
   async auth(username, password) {

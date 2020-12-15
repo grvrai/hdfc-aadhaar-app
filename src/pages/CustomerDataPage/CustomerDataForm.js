@@ -20,30 +20,41 @@ class CustomerDataForm extends React.Component {
         super(props);
 
         this.handleSubmit = this.handleSubmit.bind(this);
-
+        
         this.state = {
-            customer_name: '',
-            contact_no: '',
+            name: '',
+            phone: '',
             gender: 'male',
             general_error: '',
             customer_type: '',
-            service_type: '',
-            cross_sell_lead: '',
+            service_availed: '',
+            cross_sell_lead_generated: '',
             crm_no: '',
             isLoading: false
+        }
+
+        if(props.match.params.id) {
+            // this.state = CustomerDataService.get
+            this.state.isUpdate = true
         }
     }
 
     async handleSubmit(e) {
         e.preventDefault();
+        
         this.setState({
             general_error: '',
             isLoading: true
         });
 
         try {
-            await CustomerDataService.addRecordToCache(this.state);
-            this.props.history.push('/');
+            if(this.state.isUpdate) {
+                await CustomerDataService.updateRecordInCache(this.props.match.params.id, this.state)
+            } else {
+                await CustomerDataService.addRecordToCache(this.state);
+            }
+            
+            this.props.history.push('/customerdata');
             // let {user_data, state_data} = await AuthService.auth(this.state.username, this.state.password)           
             // this.props.onLoginSuccess(user_data, state_data);        
         } catch (err) {
@@ -59,11 +70,27 @@ class CustomerDataForm extends React.Component {
         }        
     }
 
+    componentDidMount() {
+        if(this.props.match.params.id) {
+            let self = this;
+            // this.state = CustomerDataService.get
+            // this.state.isUpdate = true
+            CustomerDataService.getUnsyncedRecord(this.props.match.params.id).then(function(customer_data) {
+                self.setState(customer_data);
+            })
+        }
+        
+    }
+
     render() {
-        return <Container maxWidth="sm" className="" bgcolor="">
-            <div style={{marginTop:'2rem'}}>
+        return (
+            <div style={{padding: '1rem 0'}}>
                 <form className='login-form' autoComplete="off" onSubmit={this.handleSubmit}>                   
                     <Grid container spacing={3}>
+
+                        <Grid item xs={12}>
+                            <Typography variant="h5">{this.state.isUpdate ? 'Update Customer Record' : 'Add Customer Record' }</Typography>
+                        </Grid>
                         {this.state.general_error 
                             ? <Grid item xs={12}>
                                 <Alert severity="error">{this.state.general_error}</Alert>
@@ -74,10 +101,10 @@ class CustomerDataForm extends React.Component {
                         <Grid item xs={12}>
                             <TextField 
                                 fullWidth 
-                                name="customer_name" 
+                                name="name" 
                                 label="Customer Name" 
                                 variant="outlined" 
-                                value={this.state.customer_name} 
+                                value={this.state.name} 
                                 onChange={(event) => this.setState({ [event.target.name]: event.target.value })}
                                 disabled={this.state.isLoading}
                                 required />
@@ -85,10 +112,10 @@ class CustomerDataForm extends React.Component {
                         <Grid item xs={12}>
                             <TextField 
                                 fullWidth 
-                                name="contact_no" 
+                                name="phone" 
                                 label="Contact Number" 
                                 variant="outlined" 
-                                value={this.state.contact_no} 
+                                value={this.state.phone} 
                                 onChange={(event) => this.setState({ [event.target.name]: event.target.value })}
                                 disabled={this.state.isLoading}
                                 type="number"
@@ -117,9 +144,9 @@ class CustomerDataForm extends React.Component {
                                 name="customer_type" 
                                 value={this.state.customer_type}
                                 onChange={(event) => this.setState({ [event.target.name]: event.target.value })}
-                                label="Age" >
-                                <MenuItem value={'non_hdfc_customer'}>Non HDFC Bank Customer</MenuItem>
-                                <MenuItem value={'hdfc_customer'}>HDFC Bank Customer</MenuItem>
+                                label="Customer Type" >
+                                <MenuItem value={'nonhdfc'}>Non HDFC Bank Customer</MenuItem>
+                                <MenuItem value={'hdfc'}>HDFC Bank Customer</MenuItem>
                             </Select>
                         </FormControl>
                         </Grid>
@@ -128,12 +155,12 @@ class CustomerDataForm extends React.Component {
                             <InputLabel id="select-service_type">Type of Service Availed</InputLabel>
                             <Select
                                 labelId="select-service_type"
-                                name="service_type" 
-                                value={this.state.service_type}
+                                name="service_availed" 
+                                value={this.state.service_availed}
                                 onChange={(event) => this.setState({ [event.target.name]: event.target.value })}
-                                label="Age" >
+                                label="Type of Service Availed" >
                                     {['New Enrolment', 'Mandatory Biometric update',  'Biometric update with or without Demographic update', 'Demographic update'].map((item, i) => 
-                                        <MenuItem value={item}>{item}</MenuItem>
+                                        <MenuItem value={item} key={i}>{item}</MenuItem>
                                     )}                         
                                 
                             </Select>
@@ -144,12 +171,12 @@ class CustomerDataForm extends React.Component {
                             <InputLabel id="select-cross_sell_lead">Cross Sell Lead</InputLabel>
                             <Select
                                 labelId="select-cross_sell_lead"
-                                name="cross_sell_lead" 
-                                value={this.state.cross_sell_lead}
+                                name="cross_sell_lead_generated" 
+                                value={this.state.cross_sell_lead_generated}
                                 onChange={(event) => this.setState({ [event.target.name]: event.target.value })}
-                                label="Age" >
+                                label="Cross Sell Lead" >
                                     {['SA', 'CA', 'CSA', 'FD','PL', 'GL' , 'BL' ,'HL', 'AL' ,'TW', 'CC','LAP'].map((item, i) => 
-                                        <MenuItem value={item}>{item}</MenuItem>
+                                        <MenuItem value={item} key={i}>{item}</MenuItem>
                                     )}                         
                                 
                             </Select>
@@ -177,16 +204,17 @@ class CustomerDataForm extends React.Component {
                                 disabled={this.state.isLoading}>
                                 {this.state.isLoading 
                                     ? <Grid container alignItems="center" justify="center">
-                                        <CircularProgress color="secondary" size={16} style={{marginRight: '1rem'}}/> Adding Record
+                                        <CircularProgress color="secondary" size={16} style={{marginRight: '1rem'}}/> {this.state.isUpdate ? 'Updating Record' : 'Adding Record'}
                                         </Grid>
-                                    : 'Add Customer Record'
+                                    
+                                    : this.state.isUpdate ? 'Update Customer Record' : 'Add Customer Record'
                                 }                                
                             </Button> 
                         </Grid>
                     </Grid>                
                 </form>               
             </div>
-        </Container>
+        )
     }
 }
 

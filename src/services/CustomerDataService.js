@@ -1,4 +1,6 @@
 import localforage from 'localforage'
+import {fetchData} from '../helpers/helpers'
+import Constants from './../constants'
 
 class CustomerDataService {
     constructor() {
@@ -10,7 +12,7 @@ class CustomerDataService {
         if(!data) data = [];
 
         customer_data.createdAt = new Date().toISOString();
-        customer_data.id = new Date().toISOString();
+        customer_data.id = new Date().getTime();
         customer_data.unsynced = true;
         
         data.push(customer_data);
@@ -47,8 +49,18 @@ class CustomerDataService {
         return data ? data : [];
     }
 
-    async uploadRecords() {
+    async getUnsyncedRecord(id) {
+        let records = await this.getUnsyncedRecords();
+        for (let index = 0; index < records.length; index++) {
+            if(records[index].id == id) return records[index];
+        }
+    }
 
+    async uploadRecords() {
+        let data = await localforage.getItem(this.CACHE_KEY);
+        // await localforage.setItem(this.CACHE_KEY, [])
+        await fetchData('POST', `${Constants.aadhaar_domain}/aadhaar/customerdata/`, data)
+        return localforage.setItem(this.CACHE_KEY, [])
     }
 }
 

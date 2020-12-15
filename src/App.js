@@ -16,8 +16,8 @@ import Constants from './constants'
 
 import AuthService from './services/auth-service'
 
-import {
-  BrowserRouter as Router,
+import { 
+  HashRouter as Router,
   Switch,
   Route,
   Link,
@@ -115,8 +115,9 @@ class App extends React.Component {
           <Route path="/notifications">
             <NotificationPage state={this.state.state} user={this.state.user} />
           </Route>
-          <Route path="/customerdata">
-            <CustomerDataPage state={this.state.state} user={this.state.user} />
+          {/* <Route path="/customerdata" component={CustomerDataPage}  state={this.state.state} user={this.state.user}> */}
+          <Route path="/customerdata" render={props => <CustomerDataPage state={this.state.state} user={this.state.user} {...props} />}  >
+            {/* <CustomerDataPage state={this.state.state} user={this.state.user} /> */}
           </Route>
           <Route path="/">
             <HomeView state={this.state.state} user={this.state.user} />
