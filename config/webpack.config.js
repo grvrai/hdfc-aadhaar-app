@@ -683,7 +683,19 @@ module.exports = function (webpackEnv) {
           // Bump up the default maximum size (2mb) that's precached,
           // to make lazy-loading failure scenarios less likely.
           // See https://github.com/cra-template/pwa/issues/13#issuecomment-722667270
-          maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+		  maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+		  manifestTransforms: [async (manifestEntries) => {
+			const manifest = manifestEntries.map(entry => {
+				console.log('manifestTransforms')
+			//   const cdnOrigin = 'https://example.com';
+			  console.log(entry)
+			//   if (entry.url.indexOf('index.html') >= 0) {
+			// 	entry.url = 'https://staging.peakengage.com/s/d/aadhaar/' + 'index.html';
+			//   }
+			  return entry;
+			});
+			return {manifest, warnings: []};
+		  }]
         }),
       // TypeScript type checking
       useTypeScript &&

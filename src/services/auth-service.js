@@ -1,6 +1,9 @@
 import {fetchData} from '../helpers/helpers'
 import Constants from '../constants'
 
+import AadharDataService from './customer-data-service'
+import PeakPwa from './peakpwa';
+
 class AuthService {
   constructor() {
     this._isLoggedIn = localStorage.getItem('user_data') ? true : false;
@@ -38,11 +41,17 @@ class AuthService {
   login(user_data, state_data) {
     this._isLoggedIn = true;
     localStorage.setItem('user_data', JSON.stringify(user_data));
-    localStorage.setItem('state_data', JSON.stringify(state_data));
+	localStorage.setItem('state_data', JSON.stringify(state_data));
+	
+	PeakPwa.webapp.setStateData(state_data);
+    PeakPwa.subscribe();
   }
 
   logout() {
-    localStorage.clear();
+	AadharDataService.dropCache();
+	PeakPwa.unsubscribe();
+	// localStorage.clear();
+	Constants.token = null	;
     this._isLoggedIn = false;
   }
 

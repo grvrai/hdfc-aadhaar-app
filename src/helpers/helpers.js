@@ -1,5 +1,5 @@
 import Constants from '../constants'
-import AuthService from './../services/auth-service'
+// import AuthService from './../services/auth-service'
 
 export function fetchData(type, url, data, headers) {
     var init = {
@@ -17,11 +17,7 @@ export function fetchData(type, url, data, headers) {
         // referrer: 'no-referrer', // *client, no-referrer
     }
 
-    console.log('fetchData');
-    console.log(AuthService.isLoggedIn());
     if(Constants.token) {
-        // Constants.token 
-        console.log( AuthService.getUserData())
         init.headers['Authorization'] = `Token ${Constants.token}`
     }
 
@@ -31,7 +27,7 @@ export function fetchData(type, url, data, headers) {
 
 
     if (data) {
-        if (type.toLowerCase() == 'get') {
+        if (type.toLowerCase() === 'get') {
             url += getQueryString(data);
         } else {
             init.body = JSON.stringify(data);
@@ -52,7 +48,7 @@ export function fetchData(type, url, data, headers) {
             }
 
             // Check for error HTTP error codes
-            if (response.status < 200 || response.status >= 300 || response.status == 204) {
+            if (response.status < 200 || response.status >= 300 || response.status === 204) {
                 // Get response as text
                 return response.text();
             }
@@ -104,7 +100,7 @@ export function getQueryString(params) {
 }
 
 export function getTextColor(c) {
-    var c = c.substring(1); // strip #
+    c = c.substring(1); // strip #
     var rgb = parseInt(c, 16); // convert rrggbb to decimal
     var r = (rgb >> 16) & 0xff; // extract red
     var g = (rgb >> 8) & 0xff; // extract green

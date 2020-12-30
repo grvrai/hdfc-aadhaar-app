@@ -8,9 +8,11 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 // import ListItemLink from '@material-ui/core/ListItemLink';
 import Divider from '@material-ui/core/Divider';
-import { Redirect } from 'react-router';
-import EventAvailableIcon from '@material-ui/icons/EventAvailable';
+import { useHistory } from 'react-router';
+
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import ErrorIcon from '@material-ui/icons/Error';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -23,31 +25,25 @@ const useStyles = makeStyles((theme) => ({
 
 export default function HomeActionsList() {
     const classes = useStyles();
-    const [path, setPath] = useState(0);
-    console.log(path);
+    // const [path, setPath] = useState(0);
+    const history = useHistory();
+
     return (
       <Paper className={classes.root}>
-        {path ? <Redirect to={path} /> : ''}
-        <List component="nav" aria-label="main mailbox folders">
-        <ListSubheader>Reporting Actions</ListSubheader>
-          <ListItem button onClick={(e) => {setPath('/customerdata')}}>
-            <ListItemIcon>
-              <GroupAddIcon />
-            </ListItemIcon>
-            <ListItemText primary="Report Customer Data" />
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <EventAvailableIcon />
-            </ListItemIcon>
-            <ListItemText primary="Report Daily Data" />
-          </ListItem>
-        </List>
-        <Divider />
+
         <List component="nav" aria-label="secondary mailbox folders">
-        <ListSubheader>Other Actions</ListSubheader>
-          <ListItem button>
-            <ListItemText primary="Raise Issue" />
+        {/* <ListSubheader>Other Actions</ListSubheader> */}
+          <ListItem button onClick={(e) => {history.push('/marketingactivity')}} >
+            <ListItemIcon>
+              <AssignmentIcon />
+            </ListItemIcon>
+            <ListItemText primary="Report Marketing Activity" />
+          </ListItem>
+          <ListItem button onClick={(e) => {history.push('/issues')}} >
+            <ListItemIcon>
+              <ErrorIcon />
+            </ListItemIcon>
+            <ListItemText primary="Create New Issue" />
           </ListItem>
         </List>
       </Paper>

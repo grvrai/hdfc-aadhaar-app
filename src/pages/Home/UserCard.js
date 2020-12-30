@@ -39,7 +39,7 @@ export default function UserCard(props) {
 
   return (
      <Paper className={classes.root}>
-        <Grid container spacing={2}>
+        <Grid container spacing={1}>
             <Grid item xs={12} container spacing={2} alignItems="center">
                 <Grid item xs={2} >
                     <Avatar color="primary">
@@ -47,17 +47,17 @@ export default function UserCard(props) {
                     </Avatar>
                 </Grid>
                 <Grid item xs={10}>
-                    <Typography variant="caption" style={{lineHeight: 1}}>Employee Name</Typography>
+                    {/* <Typography variant="caption" style={{lineHeight: 1}}>Employee Name</Typography> */}
                     <Typography variant="h6" color="primary">{props.state.name}</Typography>
                 </Grid>
             </Grid>
-            <Grid item xs={12} container spacing={2}>
+            <Grid item xs={12} container spacing={1}>
                 <Grid item xs={2}></Grid>
-                <Grid item xs={4}>
+                <Grid item xs={5}>
                     <Typography variant="caption" component="div" style={{lineHeight: 1.5}}>Employee Code</Typography>
                     <Typography variant="body1" component="div" color="primary">{props.state.filter3}</Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={5}>
                     <Typography variant="caption" component="div"  style={{lineHeight: 1.5}}>Branch</Typography>
                     <Typography variant="body1" component="div" color="primary">{props.state.filter4}</Typography>
                 </Grid>

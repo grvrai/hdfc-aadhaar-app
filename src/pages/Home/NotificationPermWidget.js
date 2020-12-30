@@ -15,7 +15,8 @@ import PeakPwa from './../../services/peakpwa'
 const useStyles = makeStyles((theme) =>({
   root: {
     // maxWidth: 345,
-    margin: '1rem'
+    // backgroundColor: '#',
+    marginTop: '1rem'
   },
   media: {
     // height: 140,
@@ -50,7 +51,7 @@ export default function NotificationPermissionWidget() {
               startIcon={!isLoading ? <NotificationsActiveIcon /> : ''}>
               {isLoading 
                   ? <Grid container alignItems="center" justify="center">
-                      <CircularProgress color="secondary" size={16} style={{marginRight: '14px'}}/> Enabling Notifications
+                      <CircularProgress color="primary" size={16} style={{marginRight: '14px'}}/> Enabling Notifications
                     </Grid>
                   : 'Enable Notifications'
               }              

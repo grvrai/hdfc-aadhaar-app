@@ -17,7 +17,8 @@ var Constants = {
 
 	// Service worker config
 	// serviceWorker_path: "/s/d/aadhaar/peak-serviceworker.js",
-	serviceWorker_path: process.env.NODE_ENV == 'development' ? "/peak-serviceworker.js" : '/s/d/aadhaar/peak-serviceworker.js',
+	// serviceWorker_path: process.env.NODE_ENV == 'development' ? "/peak-serviceworker.js" : '/s/d/aadhaar/peak-serviceworker.js',
+	serviceWorker_path: '/s/d/aadhaar/peak-serviceworker.js',
 	scope: '/welcome/',
 	
 	action_throttles: {

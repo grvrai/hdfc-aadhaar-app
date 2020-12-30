@@ -5,21 +5,29 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+// import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Popover from '@material-ui/core/Popover';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-
+import LockIcon from '@material-ui/icons/Lock';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import AuthService from './../services/auth-service'
+import { useHistory } from 'react-router';
+
+import {useConfirmationDialog } from './ConfirmationDialogProvider'
+
+import Constants from './../constants'
 
 const useStyles = makeStyles((theme) => ({
+
   root: {
     flexGrow: 1,
   },
-  menuButton: {
+  backButton: {
     marginRight: theme.spacing(2),
   },
   title: {
@@ -29,26 +37,39 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MenuAppBar(props) {
   const classes = useStyles();
-  let auth = AuthService.isLoggedIn();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+  const [backBtn, showBackBtn] = React.useState(null);
 
-  let user_state = AuthService.getUserState()
+  let history = useHistory();
+
+  let auth = AuthService.isLoggedIn();
+  let user_state = AuthService.getUserState();
+
+  let { getConfirmation } = useConfirmationDialog()
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
+  React.useEffect(() => {
+    history.listen((location) => {
+      showBackBtn(!(location.pathname == '/'));
+    });
+  }, [])
+
   return (
     <div>
       <AppBar position="fixed">
         <Toolbar>
-          {/* <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton> */}
-          <img src={process.env.PUBLIC_URL + '/hdfc-logo-256x256.png'} style={{height: '30px', marginRight: '1rem'}}/>
+          {backBtn
+            ? <IconButton edge="start" className={classes.backButton} color="inherit" aria-label="back" onClick={() => {history.goBack()}}>
+                <ArrowBackIcon />
+              </IconButton>
+            : <img src={process.env.PUBLIC_URL + '/Aadhar-White.svg'} className={classes.backButton} style={{height: '30px'}}/>
+          }
+          
           <Typography variant="h6" className={classes.title}>
-            HDFC Aadhaar Employee
+            Aadhaar Reporting App
           </Typography>
           {auth && (
             <div>
@@ -73,7 +94,7 @@ export default function MenuAppBar(props) {
                   vertical: 'top',
                   horizontal: 'right',
                 }}
-                open={open}
+                open={Boolean(anchorEl)}
                 // close={close}
                 onClose={() => {
                   setAnchorEl(null)
@@ -84,8 +105,21 @@ export default function MenuAppBar(props) {
                   </ListItemIcon>
                   <ListItemText color="primary" primary={user_state.name} />
                 </MenuItem>
-                <MenuItem onClick={()=> {
+                <MenuItem button onClick={()=> {history.push('/change_password/')}}>
+                  <ListItemIcon style={{minWidth:"30px"}}>
+                    <LockIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText color="primary" primary="Change Password" />
+                </MenuItem>
+                <MenuItem onClick={async ()=> {
                   setAnchorEl(null);
+                  const confirmed = await getConfirmation({
+                    title: 'Logout', 
+                    message: 'Are you sure you want to logout? Any pending upload data will be lost.',
+                    btnConfirmText: 'Logout'
+                  });
+                
+                  if(!confirmed) return;
                   props.onLogout();
                 }}>
                   <ListItemIcon style={{minWidth:"30px"}}>
@@ -101,17 +135,3 @@ export default function MenuAppBar(props) {
     </div>
   );
 }
-
-
-{/* <Popover 
-  anchorOrigin={{
-    vertical: 'bottom',
-    horizontal: 'right',
-  }}
-  transformOrigin={{
-    vertical: 'top',
-    horizontal: 'right',
-  }}
->
-  The content of the Popover.
-</Popover> */}

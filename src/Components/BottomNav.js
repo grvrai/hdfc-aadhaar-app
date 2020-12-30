@@ -5,12 +5,14 @@ import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 
 import HomeIcon from '@material-ui/icons/Home';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import ErrorIcon from '@material-ui/icons/Error';
 
-import { Redirect, BrowserRouter as Router, } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles({
   root: {
     // width: 500,
+    zIndex: 1,
     position: 'fixed',
     bottom: 0,
     left: 0,
@@ -22,19 +24,28 @@ export default function BottomNav() {
   const classes = useStyles();
   const [path, setPath] = React.useState('/');
 
+  let history = useHistory();
+//   const { pathname } = useLocation();
+
+  React.useEffect(() => {
+    history.listen((location)=> {
+      setPath(location.pathname);
+    });  
+  }, []);
+
   return (
     <BottomNavigation
       value={path}
       onChange={(event, newValue) => {
-        setPath(newValue);
+		setPath(newValue);
+		history.push(newValue)
       }}
       showLabels
       className={classes.root}
       position="fixed">
-      {path ? <Redirect to={path} /> : ''}
-      <BottomNavigationAction label="Home" value="/" icon={<HomeIcon />} />
+      <BottomNavigationAction label="Home" value="/" icon={<HomeIcon />}/>
       <BottomNavigationAction label="Notifications" value="/notifications" icon={<NotificationsIcon />} />
-      {/* <BottomNavigationAction label="Nearby" value="/" icon={<LocationOnIcon />} /> */}
+      <BottomNavigationAction label="Issues" value="/issues" icon={<ErrorIcon />} />
     </BottomNavigation>
   );
 }

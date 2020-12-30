@@ -6,32 +6,15 @@ import Typography from '@material-ui/core/Typography';
 import { Button, Paper } from '@material-ui/core';
 
 import NotificationPermissionWidget from './NotificationPermWidget'
+import RecentNotification from './RecentNotification'
 import UserCard from './UserCard'
 import HomeActionsList from './HomeActionsList'
+import CustomerDataWidget from './CustomerDataWidget'
+import DailyDataWidget from './DailyDataWidget'
 
 import PeakPwa from './../../services/peakpwa'
 
-// function HomeView() {
-  
-//   let isPermGranted = PeakPwa.getPermissionStatus() == 'granted';
 
-//   return (
-//       <Container maxWidth="sm" className="">
-        
-//         <Paper>
-//           <img src={logo} className="App-logo" alt="logo" />
-//           <Typography variant="h4" component="h1" gutterBottom>
-            
-//           </Typography>
-//           <Button variant="contained" color="primary">
-//             Primary Button
-//           </Button>
-//         </Paper>
-
-//         {!isPermGranted ? <NotificationPermissionWidget /> : ''}        
-//       </Container>
-//   );
-// }
 
 class HomeView extends React.Component {
   constructor(props) {
@@ -64,7 +47,8 @@ class HomeView extends React.Component {
   }
 
   handlePushReceived(e) {
-    console.log('handlePushReceived');
+	console.log('handlePushReceived');
+	console.log(e.data);
     if(e.data.action == 'push_received') {
       this.setState({
         isPushRecieved: true
@@ -73,15 +57,19 @@ class HomeView extends React.Component {
   }
 
   render() {
-    console.log(this.props)
     return (
-      <Container maxWidth="sm" className="" disableGutters>
+      <Container style={{padding: '1rem'}}>
+        <RecentNotification />
         <UserCard state={this.props.state} />
-        {!this.state.isPermGranted ? <NotificationPermissionWidget /> : ''}   
+        {!this.state.isPermGranted ? <NotificationPermissionWidget /> : ''}
+        <CustomerDataWidget />
+        <DailyDataWidget />
         <HomeActionsList />     
       </Container>
   );
   }
  }
+
+
 
 export default HomeView;

@@ -10,7 +10,10 @@ var dataCacheName = 'pass-data-v1';
 var cacheName = 'pass-cache-v1';
 var OFFLINE_URL = 'https://d3qu4ca2fqz9dn.cloudfront.net/peak_offline.html'
 var filesToCache = [
-	OFFLINE_URL
+	OFFLINE_URL,
+	'https://staging.peakengage.com/s/d/aadhaar/',
+	'https://s3-us-west-2.amazonaws.com/engagementservices-us-west-2/Resources/Default/main.css',
+	'https://s3-us-west-2.amazonaws.com/engagementservices-us-west-2/Resources/Default/main.js'
 ];
 var mLastPush = null;
 var constants = {};
@@ -63,6 +66,8 @@ self.addEventListener('activate', function (e) {
 });
 
 self.addEventListener('fetch', function (event) {
+	// console.log('[SW] - fetch');
+	// console.log(event.request);
 	// event.respondWith(
 	//
 	// 	fetch(event.request)
@@ -73,7 +78,7 @@ self.addEventListener('fetch', function (event) {
 
 	if (!navigator.onLine) {
 		event.respondWith(
-			caches.match(OFFLINE_URL)
+			caches.match(event.request.url)
 		)
 	}
 });

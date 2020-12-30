@@ -9,11 +9,14 @@ import Alert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import CustomerDataService from '../../services/CustomerDataService';
+import AadharDataService from '../../services/customer-data-service';
 import { withRouter } from "react-router-dom";
+import { withSnackbar } from 'notistack';
+
+import FormContainer from './../../Components/FormContainer'
+import LoadingButton from './../../Components/LoadingButton'
 
 class CustomerDataForm extends React.Component {
     constructor(props) {
@@ -34,7 +37,7 @@ class CustomerDataForm extends React.Component {
         }
 
         if(props.match.params.id) {
-            // this.state = CustomerDataService.get
+            // this.state = AadharDataService.get
             this.state.isUpdate = true
         }
     }
@@ -49,9 +52,15 @@ class CustomerDataForm extends React.Component {
 
         try {
             if(this.state.isUpdate) {
-                await CustomerDataService.updateRecordInCache(this.props.match.params.id, this.state)
+                await AadharDataService.updateRecordInCache(this.props.match.params.id, this.state);
+                this.props.enqueueSnackbar('Customer Data Updated', {
+                    variant: 'success'
+                })
             } else {
-                await CustomerDataService.addRecordToCache(this.state);
+                await AadharDataService.addRecordToCache(this.state);
+                this.props.enqueueSnackbar('Customer Data Added', {
+                    variant: 'success'
+                })
             }
             
             this.props.history.push('/customerdata');
@@ -73,9 +82,9 @@ class CustomerDataForm extends React.Component {
     componentDidMount() {
         if(this.props.match.params.id) {
             let self = this;
-            // this.state = CustomerDataService.get
+            // this.state = AadharDataService.get
             // this.state.isUpdate = true
-            CustomerDataService.getUnsyncedRecord(this.props.match.params.id).then(function(customer_data) {
+            AadharDataService.getUnsyncedRecord(this.props.match.params.id).then(function(customer_data) {
                 self.setState(customer_data);
             })
         }
@@ -84,7 +93,7 @@ class CustomerDataForm extends React.Component {
 
     render() {
         return (
-            <div style={{padding: '1rem 0'}}>
+            <FormContainer>
                 <form className='login-form' autoComplete="off" onSubmit={this.handleSubmit}>                   
                     <Grid container spacing={3}>
 
@@ -195,28 +204,24 @@ class CustomerDataForm extends React.Component {
                                 required />
                         </Grid>
                         <Grid item xs={12}>
-                            <Button 
+                            <LoadingButton 
+                                btnText={this.state.isUpdate ? 'Update Customer Record' : 'Add Customer Record'}
+                                loadingText={this.state.isUpdate ? 'Updating Record' : 'Adding Record'}
+                                isLoading={this.state.isLoading}
                                 color="secondary" 
                                 fullWidth 
                                 type="submit" 
                                 variant="contained" 
                                 size="large"
-                                disabled={this.state.isLoading}>
-                                {this.state.isLoading 
-                                    ? <Grid container alignItems="center" justify="center">
-                                        <CircularProgress color="secondary" size={16} style={{marginRight: '1rem'}}/> {this.state.isUpdate ? 'Updating Record' : 'Adding Record'}
-                                        </Grid>
-                                    
-                                    : this.state.isUpdate ? 'Update Customer Record' : 'Add Customer Record'
-                                }                                
-                            </Button> 
+                            />
                         </Grid>
                     </Grid>                
                 </form>               
-            </div>
+            </FormContainer>
         )
     }
 }
 
 // export default CustomerDataForm;
-export default withRouter(CustomerDataForm);
+
+export default withSnackbar(withRouter(CustomerDataForm));

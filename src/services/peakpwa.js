@@ -41,7 +41,11 @@ var PeakPwa = function () {
 		console.log(constants)
 		if(webapp.isInit) return;
 
-		constants.serialno = state.template.serialno;
+		if(state) {
+			constants.serialno = state.template.serialno;
+			constants.state_data = state;
+		}
+		
 
 		webapp.constants = constants;
 
@@ -69,6 +73,12 @@ var PeakPwa = function () {
 		webapp.idbCache.set('peak_constants', constants);
 
 		webapp.initListeners();
+
+		if(!state) {
+			document.dispatchEvent(new CustomEvent('PeakPwaInit', {}));
+			webapp.isInit = true;
+			return;
+		};
 
 		let isSubscribed = await webapp.getSubscriptionStatus();
 		let isAddedToHomescreen = webapp.isAddedToHomescreen();
@@ -524,17 +534,19 @@ var PeakPwa = function () {
 			return permData.deviceToken;
 		}
 
-		var installToken = localStorage.getItem(`${NAMESPACE}_installToken`);
+		let key = `${NAMESPACE}_installToken_${webapp.constants.state_data.id}`;
+		var installToken = localStorage.getItem(key);
 		if (!installToken) {
 			installToken = webapp.uuidv4();
-			localStorage.setItem(`${NAMESPACE}_installToken`, installToken);
+			localStorage.setItem(key, installToken);
 		}
 		return installToken;
 	}
 
 	webapp.getTrackerSerialno = function () {
 		if (webapp.constants.tracker_serialno) return webapp.constants.tracker_serialno;
-		var serialno = localStorage.getItem(`${NAMESPACE}_trackerSerialno`);
+		let key = `${NAMESPACE}_trackerSerialno_${webapp.constants?.state_data?.id}`;
+		var serialno = localStorage.getItem(key);
 		return serialno;
 	}
 
@@ -543,6 +555,9 @@ var PeakPwa = function () {
 	}
 
 	webapp.setStateData = function(state)  {
+		webapp.serialno = state.template.serialno;
+		webapp.constants.serialno = state.template.serialno;
+		webapp.constants.state_data = state;
 		localStorage.setItem(`${NAMESPACE}_stateSerialno`, state.serialno);
 		localStorage.setItem(`${NAMESPACE}_stateId`, state.id);
 		localStorage.setItem(`${NAMESPACE}_stateEncodedId`, state.encoded_id);
@@ -1019,9 +1034,9 @@ var PeakPwa = function () {
 			json = await response.json();
 		} catch (e) {}
 
-		var isNewSub = localStorage.getItem(`${NAMESPACE}_trackerSerialno`) ? false : true;
+		var isNewSub = webapp.getTrackerSerialno() ? false : true;
 
-		localStorage.setItem(`${NAMESPACE}_trackerSerialno`, json.tracker.serialno);
+		localStorage.setItem(`${NAMESPACE}_trackerSerialno_${json.state.id}`, json.tracker.serialno);
 		localStorage.setItem(`${NAMESPACE}_stateSerialno`, json.state.serialno);
 		localStorage.setItem(`${NAMESPACE}_stateId`, json.state.id);
 		localStorage.setItem(`${NAMESPACE}_stateEncodedId`, json.state.encoded_id);
