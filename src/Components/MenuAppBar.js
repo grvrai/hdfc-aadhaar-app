@@ -69,7 +69,7 @@ export default function MenuAppBar(props) {
           }
           
           <Typography variant="h6" className={classes.title}>
-            Aadhaar Reporting App
+            Aadhaar Seva Kendra
           </Typography>
           {auth && (
             <div>

@@ -13,6 +13,7 @@ import { useHistory } from 'react-router';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import ErrorIcon from '@material-ui/icons/Error';
+import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -44,6 +45,12 @@ export default function HomeActionsList() {
               <ErrorIcon />
             </ListItemIcon>
             <ListItemText primary="Create New Issue" />
+          </ListItem>
+					<ListItem button onClick={(e) => {history.push('/app_issue')}} >
+            <ListItemIcon>
+              <PhoneIphoneIcon />
+            </ListItemIcon>
+            <ListItemText primary="Report App Issue" />
           </ListItem>
         </List>
       </Paper>

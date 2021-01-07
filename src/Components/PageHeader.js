@@ -15,17 +15,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function PageHeader(props) {
+export default function PageHeader({ icon, title }) {
     const classes = useStyles();
     return (
         <AppBar position="sticky" className={classes.root}>
             <Toolbar>
             <IconButton edge="start"  color="inherit" aria-label="menu">
-                {props.icon}
+                {icon}
             </IconButton>
             {/* <img src={process.env.PUBLIC_URL + '/hdfc-logo-256x256.png'} style={{height: '30px', marginRight: '1rem'}}/> */}
             <Typography variant="h6" >
-                {props.title}
+                {title}
             </Typography>
             </Toolbar>
         </AppBar>

@@ -31,6 +31,7 @@ import {
 // import RestrictedRoute from './routes/RestrictedRoute'
 
 import "./App.css";
+import ContactForm from "./pages/ContactPage/ContactForm";
 
 class App extends React.Component {
   constructor(props) {
@@ -149,6 +150,13 @@ class App extends React.Component {
                   <IssuePage
                     state={this.state.state}
                     user={this.state.user}
+                    {...props}
+                  />
+                )}></Route>
+								 <Route
+                path="/app_issue"
+                render={(props) => (
+                  <ContactForm
                     {...props}
                   />
                 )}></Route>

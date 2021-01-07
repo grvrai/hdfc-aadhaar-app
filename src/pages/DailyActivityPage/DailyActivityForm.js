@@ -27,7 +27,7 @@ class DailyActivityForm extends React.Component {
 
 		let dt = new Date();
 		this.state = {
-			date: `${dt.getFullYear()}-${dt.getMonth() + 1}-${dt.getDate()}`,
+			// date: `${dt.getFullYear()}-${dt.getMonth() + 1}-${dt.getDate()}`,
 			date_update: "",
 			new_enrolments: 0,
 			biometric_updates: 0,
@@ -84,45 +84,54 @@ class DailyActivityForm extends React.Component {
 			if (err.response && err.response.data) {
 				this.setState({formError: err.response.data});
 			}
-			for (const key in err.response) {
-				if (key == "non_field_errors" || key == "detail") {
-					this.setState({
-						general_error: err.response[key],
-					});
-				}
-			}
+			// for (const key in err.response) {
+			// 	if (key == "non_field_errors" || key == "detail") {
+			// 		this.setState({
+			// 			general_error: err.response[key],
+			// 		});
+			// 	}
+			// }
 		}
 	}
 
 	componentDidMount() {
 		if (this.props.match.params.id) {
+			console.log("DailyActivityForm");
+			console.log(this.props.match.params.id);
 			let self = this;
 			api.get(`/aadhaar/dailyactivity/${this.props.match.params.id}/`).then(function (data) {
-				self.setState(data);
+				console.log(data);
+				self.setState(data.data);
 				self.setState({isLoading: false});
 			});
 		}
 	}
 
 	render() {
+		let formError = this.state.formError;
 		return (
 			<FromContainer>
 				<form autoComplete="off" onSubmit={this.handleSubmit}>
 					<Grid container spacing={3}>
 						<Grid item xs={12}>
-							<Typography variant="h5">
+							<Typography variant="h6" color="secondary">
 								{this.state.isUpdate ? "Update Daily Activity" : "Add Daily Activity"}
 							</Typography>
+							{this.state.isUpdate ? (
+								<Typography variant="subtitle1">For {new Date(this.state.createdAt).toLocaleDateString()}</Typography>
+							) : (
+								""
+							)}
 						</Grid>
-						{this.state.general_error ? (
+						{formError && formError.non_field_errors ? (
 							<Grid item xs={12}>
-								<Alert severity="error">{this.state.general_error}</Alert>
+								<Alert severity="error">{formError.non_field_errors.join("\n")}</Alert>
 							</Grid>
 						) : (
 							""
 						)}
 
-						<Grid item xs={12}>
+						{/* <Grid item xs={12}>
 							<TextField
 								fullWidth
 								type="date"
@@ -134,7 +143,7 @@ class DailyActivityForm extends React.Component {
 								disabled
 								required
 							/>
-						</Grid>
+						</Grid> */}
 						<Grid item xs={12}>
 							<FormControl variant="outlined" fullWidth>
 								<InputLabel id="select-date-update">Date Update</InputLabel>
@@ -144,7 +153,7 @@ class DailyActivityForm extends React.Component {
 									value={this.state.date_update}
 									onChange={(event) => this.setState({[event.target.name]: event.target.value})}
 									label="Date Update">
-									<MenuItem value={""}>None</MenuItem>
+									<MenuItem value="">None</MenuItem>
 									<MenuItem value={"State Holiday"}>State Holiday</MenuItem>
 									<MenuItem value={"On Leave"}>On Leave</MenuItem>
 									<MenuItem value={"Training"}>Training</MenuItem>
@@ -192,6 +201,7 @@ class DailyActivityForm extends React.Component {
 								variant="outlined"
 								error={Boolean(this.state.formError?.biometric_updates)}
 								helperText={this.state.formError?.biometric_updates?.join("\n")}
+								value={this.state.biometric_updates}
 								onChange={(event) => this.setState({[event.target.name]: event.target.value})}
 								disabled={this.state.isLoading}
 								required

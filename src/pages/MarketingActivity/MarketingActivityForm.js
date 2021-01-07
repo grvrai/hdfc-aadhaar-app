@@ -77,13 +77,16 @@ class MarketingActivityForm extends React.Component {
 			this.setState({
 				isLoading: false,
 			});
-			for (const key in err.response) {
-				if (key == "non_field_errors" || key == "detail") {
-					this.setState({
-						general_error: err.response[key],
-					});
-				}
+			if (err.response && err.response.data) {
+				this.setState({formError: err.response.data});
 			}
+			// for (const key in err.response) {
+			// 	if (key == "non_field_errors" || key == "detail") {
+			// 		this.setState({
+			// 			general_error: err.response[key],
+			// 		});
+			// 	}
+			// }
 		}
 	}
 
@@ -98,6 +101,7 @@ class MarketingActivityForm extends React.Component {
 	}
 
 	render() {
+		let formError = this.state.formError;
 		return (
 			<FromContainer>
 				<form className="login-form" autoComplete="off" onSubmit={this.handleSubmit}>
@@ -115,6 +119,14 @@ class MarketingActivityForm extends React.Component {
 							""
 						)}
 
+						{formError && formError.non_field_errors ? (
+							<Grid item xs={12}>
+								<Alert severity="error">{formError.non_field_errors.join("\n")}</Alert>
+							</Grid>
+						) : (
+							""
+						)}
+
 						<Grid item xs={12}>
 							<TextField
 								fullWidth
@@ -123,6 +135,8 @@ class MarketingActivityForm extends React.Component {
 								label="Number of Camps"
 								variant="outlined"
 								value={this.state.camps_count}
+								error={Boolean(this.state.formError?.camps_count)}
+								helperText={this.state.formError?.camps_count?.join("\n")}
 								onChange={(event) => this.setState({[event.target.name]: event.target.value})}
 								disabled={this.state.isLoading}
 								required
@@ -135,8 +149,11 @@ class MarketingActivityForm extends React.Component {
 									labelId="select-camp_location"
 									name="camp_location"
 									value={this.state.camp_location}
+									error={Boolean(this.state.formError?.camp_location)}
+									helperText={this.state.formError?.camp_location?.join("\n")}
 									onChange={(event) => this.setState({[event.target.name]: event.target.value})}
-									label="Camp done at">
+									label="Camp done at"
+									required>
 									<MenuItem value={"corporate"}>Corporate</MenuItem>
 									<MenuItem value={"school"}>School</MenuItem>
 									<MenuItem value={"govtoffice"}>Govt. Office</MenuItem>
@@ -153,6 +170,8 @@ class MarketingActivityForm extends React.Component {
 								label="Number of Leaflets"
 								variant="outlined"
 								value={this.state.leaflets_count}
+								error={Boolean(this.state.formError?.leaflets_count)}
+								helperText={this.state.formError?.leaflets_count?.join("\n")}
 								onChange={(event) => this.setState({[event.target.name]: event.target.value})}
 								disabled={this.state.isLoading}
 								required
@@ -166,6 +185,8 @@ class MarketingActivityForm extends React.Component {
 								label="Number of Posters"
 								variant="outlined"
 								value={this.state.posters_count}
+								error={Boolean(this.state.formError?.posters_count)}
+								helperText={this.state.formError?.posters_count?.join("\n")}
 								onChange={(event) => this.setState({[event.target.name]: event.target.value})}
 								disabled={this.state.isLoading}
 								required
@@ -180,9 +201,11 @@ class MarketingActivityForm extends React.Component {
 								label="Other Activity Done"
 								variant="outlined"
 								value={this.state.other_activity}
+								error={Boolean(this.state.formError?.other_activity)}
+								helperText={this.state.formError?.other_activity?.join("\n")}
 								onChange={(event) => this.setState({[event.target.name]: event.target.value})}
 								disabled={this.state.isLoading}
-								required
+								// required
 							/>
 						</Grid>
 						<Grid item xs={12}>

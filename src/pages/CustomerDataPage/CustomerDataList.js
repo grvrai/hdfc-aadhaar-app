@@ -236,6 +236,7 @@ export default function CustomerDataList({history, match}) {
 					<CircularProgress color="secondary" size={20} />
 				</Grid>
 			)}
+			
 			{items && !items.length && !error && (
 				<Grid container justify="center" alignItems="center" style={{padding: "2rem"}}>
 					<Box color="primary.contrastText">
