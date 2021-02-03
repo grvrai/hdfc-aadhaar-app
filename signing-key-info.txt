@@ -1,0 +1,10 @@
+Keep your this file and signing.keystore in a safe place. You'll need these files if you want to upload future versions of your PWA to the Google Play Store.
+
+Key store file: signing.keystore
+Key store password: Engage123
+Key alias: aadhaar-reporting-key
+Key password: Engage123
+Signer's full name: Aadhaar App Admin
+Signer's organization: PeakEngage Technology
+Signer's organizational unit: Engineering
+Signer's country code: US

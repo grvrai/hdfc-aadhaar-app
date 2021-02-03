@@ -28,7 +28,7 @@ class DailyActivityForm extends React.Component {
 		let dt = new Date();
 		this.state = {
 			// date: `${dt.getFullYear()}-${dt.getMonth() + 1}-${dt.getDate()}`,
-			date_update: "",
+			date_update: "Working Day",
 			new_enrolments: 0,
 			biometric_updates: 0,
 			mandatory_biometric_updates: 0,
@@ -100,7 +100,6 @@ class DailyActivityForm extends React.Component {
 			console.log(this.props.match.params.id);
 			let self = this;
 			api.get(`/aadhaar/dailyactivity/${this.props.match.params.id}/`).then(function (data) {
-				console.log(data);
 				self.setState(data.data);
 				self.setState({isLoading: false});
 			});
@@ -153,11 +152,12 @@ class DailyActivityForm extends React.Component {
 									value={this.state.date_update}
 									onChange={(event) => this.setState({[event.target.name]: event.target.value})}
 									label="Date Update">
-									<MenuItem value="">None</MenuItem>
+									<MenuItem value={"Working Day"}>Working Day</MenuItem>
 									<MenuItem value={"State Holiday"}>State Holiday</MenuItem>
 									<MenuItem value={"On Leave"}>On Leave</MenuItem>
 									<MenuItem value={"Training"}>Training</MenuItem>
 									<MenuItem value={"Technical issue"}>Technical issue at branch</MenuItem>
+									{/* <MenuItem value={""}>None</MenuItem> */}
 									{/* <MenuItem value={'others'}>Others</MenuItem> */}
 								</Select>
 							</FormControl>

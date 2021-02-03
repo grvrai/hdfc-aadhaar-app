@@ -12,12 +12,11 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 
 import {withRouter} from "react-router-dom";
-import {fetchData} from "../../helpers/helpers";
+
 import {withSnackbar} from "notistack";
 
 import FromContainer from "./../../Components/FormContainer";
 
-import Constants from "./../../constants";
 import LoadingButton from "./../../Components/LoadingButton";
 
 import {api} from "./../../services/customer-data-service";
@@ -80,13 +79,6 @@ class MarketingActivityForm extends React.Component {
 			if (err.response && err.response.data) {
 				this.setState({formError: err.response.data});
 			}
-			// for (const key in err.response) {
-			// 	if (key == "non_field_errors" || key == "detail") {
-			// 		this.setState({
-			// 			general_error: err.response[key],
-			// 		});
-			// 	}
-			// }
 		}
 	}
 
@@ -94,7 +86,7 @@ class MarketingActivityForm extends React.Component {
 		if (this.props.match.params.id) {
 			let self = this;
 			api.get(`/aadhaar/marketingactivity/${this.props.match.params.id}/`).then(function (data) {
-				self.setState(data);
+				self.setState(data.data);
 				self.setState({isLoading: false});
 			});
 		}

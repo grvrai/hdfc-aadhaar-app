@@ -1,16 +1,7 @@
 import localforage from "localforage";
-import {fetchData} from "../helpers/helpers";
-
-import Constants from "./../constants";
-
-import axios from "axios";
 import {setup} from "axios-cache-adapter";
 import AuthService from "./auth-service";
-// console.log(Constants);
-console.log("custromer-data-service");
-console.log(AuthService);
-// let user_data = AuthService.getUserData();
-// console.log(user_data);
+import Constants from "./../constants";
 
 const api = setup({
 	baseURL: Constants.aadhaar_domain,
@@ -73,6 +64,16 @@ class AadharDataService {
 		};
 		this.CACHE_KEY = "AadharDataService";
 		this.DAILY_CACHE = "DailyCache";
+	}
+
+	async addCustomerRecord(customer_data) {
+		let current_time = new Date().toISOString();
+		customer_data.reportedAt = current_time;
+		await api.post("/aadhaar/customerdata/", customer_data);
+	}
+
+	async updateCustomerRecord(id, customer_data) {
+		await api.post("/aadhaar/customerdata/" + id, customer_data);
 	}
 
 	async addRecordToCache(customer_data) {
@@ -143,11 +144,6 @@ class AadharDataService {
 		let response = await api.get(`/aadhaar/customerdata/?createdAt__gte=${filter_gte}&createdAt__lte=${filter_lte}`);
 		console.log(response);
 		return response;
-
-		// return fetchData(
-		//   "GET",
-		//   `${Constants.aadhaar_domain}
-		// );
 	}
 
 	async uploadRecords() {
@@ -161,17 +157,17 @@ class AadharDataService {
 	}
 
 	async getCurrentDailyRecord(date) {
-		console.log('getCurrentDailyRecord')
+		console.log("getCurrentDailyRecord");
 		let data = await localforage.getItem(this.DAILY_CACHE);
 		if (data) {
-			console.log(data)
+			console.log(data);
 			// check if data is for current day
 			let cache_date = new Date(data.createdAt);
 			if (cache_date.toLocaleDateString() == new Date().toLocaleDateString()) {
-				console.log('getCurrentDailyRecord cache')
-				console.log(data)
+				console.log("getCurrentDailyRecord cache");
+				console.log(data);
+
 				return data;
-				
 			} else {
 				await localforage.setItem(this.DAILY_CACHE, null);
 			}
@@ -179,16 +175,18 @@ class AadharDataService {
 
 		let d = date ? new Date(date) : new Date();
 		d.setHours(0, 0, 0);
-		let filter_gte = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+		// let filter_gte = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+		let filter_gte = d.toISOString();
 		d.setDate(d.getDate() + 1);
-		let filter_lte = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+		// let filter_lte = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+		let filter_lte = d.toISOString();
 		// data = await fetchData(
 		//   "GET",
 		//   `${Constants.aadhaar_domain}/aadhaar/dailyactivity/?date__gte=${filter_gte}&date__lte=${filter_lte}`
 		// );
 
-		data = await api.get(`/aadhaar/dailyactivity/?date__gte=${filter_gte}&date__lte=${filter_lte}`);
-		console.log(data)
+		data = await api.get(`/aadhaar/dailyactivity/?createdAt__gte=${filter_gte}&createdAt__lte=${filter_lte}`);
+		console.log(data);
 		if (data && data.data.results.length > 0) {
 			console.log(data.data.results[0]);
 			await localforage.setItem(this.DAILY_CACHE, data.data.results[0]);
@@ -206,10 +204,7 @@ class AadharDataService {
 		}
 		await api.cache.clear();
 	}
-
-	addTechnicalIssue() {}
 }
 
 export {api};
-
 export default new AadharDataService();

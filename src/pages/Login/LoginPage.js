@@ -28,7 +28,7 @@ class LoginPage extends React.Component {
         <Paper
           style={{ padding: "2rem", textAlign: "center", marginTop: "1rem" }}>
           <img
-            src={process.env.PUBLIC_URL + "/Aadhar-Color.png"}
+            src={process.env.PUBLIC_URL + "/ASK-Color-512.png"}
             className="App-logo"
             alt="logo"
             style={{ padding: "1rem" }}
@@ -67,7 +67,8 @@ function LoginForm({ onLoginSuccess }) {
   //   const [username, setUsername] = React.useState('');
   //   const [username, setUsername] = React.useState('');
   let history = useHistory();
-  const handleSubmit = async function (e) {
+	
+	const handleSubmit = async function (e) {
     e.preventDefault();
     if (!window.navigator.onLine) {
       setState({

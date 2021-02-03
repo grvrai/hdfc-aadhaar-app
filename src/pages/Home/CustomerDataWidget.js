@@ -74,7 +74,7 @@ export default function CustomerDataWidget() {
 			<CardContent>
 				<Box display="flex" alignItems="center" color="primary.main">
 					<PeopleAltIcon style={{marginRight: "1rem"}} />
-					<Typography variant="h6">Customer Data</Typography>
+					<Typography variant="h6">Customer Records</Typography>
 				</Box>
 
 				{records && records.length ? (
@@ -109,22 +109,22 @@ export default function CustomerDataWidget() {
 				<ListItem
 					button
 					onClick={(e) => {
-						history.push("/customerdata/");
-					}}>
-					<ListItemIcon>
-						<FormatListBulletedIcon />
-					</ListItemIcon>
-					<ListItemText primary="View Records" />
-				</ListItem>
-				<ListItem
-					button
-					onClick={(e) => {
 						history.push("/customerdata/add");
 					}}>
 					<ListItemIcon>
 						<GroupAddIcon />
 					</ListItemIcon>
-					<ListItemText primary="Add New Customer Data" />
+					<ListItemText primary="Add New Customer Record" />
+				</ListItem>
+				<ListItem
+					button
+					onClick={(e) => {
+						history.push("/customerdata/");
+					}}>
+					<ListItemIcon>
+						<FormatListBulletedIcon />
+					</ListItemIcon>
+					<ListItemText primary="View Customer Records" />
 				</ListItem>
 			</List>
 		</Card>

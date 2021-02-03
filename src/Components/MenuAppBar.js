@@ -65,7 +65,7 @@ export default function MenuAppBar(props) {
             ? <IconButton edge="start" className={classes.backButton} color="inherit" aria-label="back" onClick={() => {history.goBack()}}>
                 <ArrowBackIcon />
               </IconButton>
-            : <img src={process.env.PUBLIC_URL + '/Aadhar-White.svg'} className={classes.backButton} style={{height: '30px'}}/>
+            : <img src={process.env.PUBLIC_URL + '/ASK-Color-192.png'} className={classes.backButton} style={{height: '30px'}}/>
           }
           
           <Typography variant="h6" className={classes.title}>

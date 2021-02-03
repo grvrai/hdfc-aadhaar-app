@@ -96,8 +96,8 @@ export default function CustomerDataList({history, match}) {
 
 	const deleteItem = async (id) => {
 		const confirmed = await getConfirmation({
-			title: "Delete Customer Data",
-			message: "Are you sure you want to delete this Customer Data?",
+			title: "Delete Customer Record",
+			message: "Are you sure you want to delete this Customer Record?",
 			btnConfirmText: "Delete",
 		});
 
@@ -134,7 +134,7 @@ export default function CustomerDataList({history, match}) {
 	// console.log(items)
 	return (
 		<Container style={{minHeight: "calc(100vh - 112px)"}} disableGutters bgcolor="primary.contrastText">
-			<PageHeader icon={<GroupAddIcon />} title={"Customer Data"} />
+			<PageHeader icon={<GroupAddIcon />} title={"Customer Records"} />
 
 			<Box bgcolor="primary.contrastText" style={{padding: "1rem"}} boxShadow={1}>
 				<FormControl variant="outlined" fullWidth>
@@ -241,7 +241,7 @@ export default function CustomerDataList({history, match}) {
 				<Grid container justify="center" alignItems="center" style={{padding: "2rem"}}>
 					<Box color="primary.contrastText">
 						<Typography variant="subtitle1" align="center">
-							You have not added any Customer Data for <b>{new Date(selectedDate).toLocaleDateString()}</b> yet.
+							You have not added any Customer Records for <b>{new Date(selectedDate).toLocaleDateString()}</b> yet.
 						</Typography>
 					</Box>
 				</Grid>

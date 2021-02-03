@@ -27,7 +27,7 @@ class CustomerDataForm extends React.Component {
 		this.state = {
 			name: "",
 			phone: "",
-			gender: "male",
+			// gender: "male",
 			general_error: "",
 			customer_type: "",
 			service_availed: "",
@@ -40,6 +40,8 @@ class CustomerDataForm extends React.Component {
 			// this.state = AadharDataService.get
 			this.state.isUpdate = true;
 		}
+
+		
 	}
 
 	async handleSubmit(e) {
@@ -52,13 +54,22 @@ class CustomerDataForm extends React.Component {
 
 		try {
 			if (this.state.isUpdate) {
-				await AadharDataService.updateRecordInCache(this.props.match.params.id, this.state);
-				this.props.enqueueSnackbar("Customer Data Updated", {
+				if(window.navigator.onLine && this.props.match.params.id < 1000000000) {
+					await AadharDataService.updateCustomerRecord(this.props.match.params.id, this.state);
+				} else {
+					await AadharDataService.updateRecordInCache(this.props.match.params.id, this.state);
+				}				
+				this.props.enqueueSnackbar("Customer Record Updated", {
 					variant: "success",
 				});
 			} else {
-				await AadharDataService.addRecordToCache(this.state);
-				this.props.enqueueSnackbar("Customer Data Added", {
+				if(window.navigator.onLine) {
+					await AadharDataService.addCustomerRecord(this.state);
+				} else {
+					await AadharDataService.addRecordToCache(this.state);
+				}
+				
+				this.props.enqueueSnackbar("Customer Record Added", {
 					variant: "success",
 				});
 			}
@@ -80,6 +91,7 @@ class CustomerDataForm extends React.Component {
 	}
 
 	componentDidMount() {
+		console.log(this.props.match.params.id);
 		if (this.props.match.params.id) {
 			let self = this;
 			// this.state = AadharDataService.get
@@ -123,7 +135,7 @@ class CustomerDataForm extends React.Component {
 						<Grid item xs={12}>
 							<TextField
 								fullWidth
-								name="number"
+								name="phone"
 								label="Contact Number"
 								variant="outlined"
 								value={this.state.phone}
@@ -133,7 +145,7 @@ class CustomerDataForm extends React.Component {
 								required
 							/>
 						</Grid>
-						<Grid item xs={12}>
+						{/* <Grid item xs={12}>
 							<FormControl variant="outlined" fullWidth>
 								<InputLabel id="select-gender">Gender</InputLabel>
 								<Select
@@ -146,7 +158,7 @@ class CustomerDataForm extends React.Component {
 									<MenuItem value={"female"}>Female</MenuItem>
 								</Select>
 							</FormControl>
-						</Grid>
+						</Grid> */}
 						<Grid item xs={12}>
 							<FormControl variant="outlined" fullWidth>
 								<InputLabel id="select-customer_type">Customer Type</InputLabel>

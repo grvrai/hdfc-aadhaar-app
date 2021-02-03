@@ -25,14 +25,9 @@ class DailyActivityForm extends React.Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 
 		this.state = {
-			issue: "",
-			branch_code: "",
-			branch_name: "",
-			operator_name: "",
-			operator_phone: "",
 			supervisor_name: "",
 			supervisor_phone: "",
-			remarks: "",
+			kyc_checks_done: 0,
 
 			isLoading: props.match.params.id ? true : false,
 		};
@@ -44,14 +39,6 @@ class DailyActivityForm extends React.Component {
 
 	async handleSubmit(e) {		
 		e.preventDefault();
-
-		// if (!window.navigator.onLine) {
-		// 	this.setState({
-		// 		general_error: "You are currently offline. Please connect to the internet to perform this action.",
-		// 		isLoading: false,
-		// 	});
-		// 	return;
-		// }
 
 		if (!window.navigator.onLine) {
 			this.setState({
@@ -68,12 +55,12 @@ class DailyActivityForm extends React.Component {
 
 		try {
 			if (this.state.isUpdate) {
-				await api.put(`/aadhaar/technicalissue/${this.props.match.params.id}/`, this.state);
+				await api.put(`/aadhaar/kycchecks/${this.props.match.params.id}/`, this.state);
 			} else {
-				await api.post(`/aadhaar/technicalissue/`, this.state);
+				await api.post(`/aadhaar/kycchecks/`, this.state);
 			}
 
-			this.props.enqueueSnackbar(`Technical Issue ${this.state.isUpdate ? "Updated" : "Reported"}`, {
+			this.props.enqueueSnackbar(`KYC Check ${this.state.isUpdate ? "Updated" : "Added"}`, {
 				variant: "success",
 			});
 
@@ -97,7 +84,8 @@ class DailyActivityForm extends React.Component {
 		let self = this;
 		if (this.props.match.params.id) {
 			try {
-				api.get(`/aadhaar/technicalissue/${this.props.match.params.id}/`).then(function (data) {
+				api.get(`/aadhaar/kycchecks/${this.props.match.params.id}/`).then(function (data) {
+					console.log(data.data)
 					self.setState(data.data);
 					self.setState({isLoading: false});
 				});
@@ -108,13 +96,13 @@ class DailyActivityForm extends React.Component {
 				this.props.history.goBack();
 			}
 		} else {
-			let state_data = AuthService.getUserState();
-			self.setState({
-				operator_name: state_data.name,
-				operator_phone: state_data.phone,
-				branch_code: state_data.filter3,
-				branch_name: state_data.filter4,
-			});
+			// let state_data = AuthService.getUserState();
+			// self.setState({
+			// 	operator_name: state_data.name,
+			// 	operator_phone: state_data.phone,
+			// 	branch_code: state_data.filter3,
+			// 	branch_name: state_data.filter4,
+			// });
 		}
 	}
 
@@ -133,83 +121,6 @@ class DailyActivityForm extends React.Component {
 						) : (
 							""
 						)}
-
-						<Grid item xs={12}>
-							<FormControl variant="outlined" fullWidth>
-								<InputLabel id="select-issue-type">Issue Type</InputLabel>
-								<Select
-									labelId="select-issue-type"
-									name="issue"
-									value={this.state.issue}
-									onChange={(event) => this.setState({[event.target.name]: event.target.value})}
-									label="Issue Type">
-									<MenuItem value={"GPS Issue"}>GPS Issue</MenuItem>
-									<MenuItem value={"Iris Issue"}>Iris Issue</MenuItem>
-									<MenuItem value={"Web Camera Issue"}>Web Camera Issue</MenuItem>
-									<MenuItem value={"Dongle Issue"}>Dongle Issue</MenuItem>
-									<MenuItem value={"Morpho Issue"}>Morpho Issue</MenuItem>
-									<MenuItem value={"Printer Issue"}>Printer Issue</MenuItem>
-									<MenuItem value={"Laptop/System Issue"}>Laptop/System Issue</MenuItem>
-									<MenuItem value={"Operator Sync Issue"}></MenuItem>
-									<MenuItem value={"Other Issue"}>Other Issue</MenuItem>
-								</Select>
-							</FormControl>
-						</Grid>
-						<Grid item xs={12}>
-							<TextField
-								fullWidth
-								multiline
-								rows={4}
-								type="number"
-								name="remarks"
-								label="Remarks"
-								variant="outlined"
-								value={this.state.remarks}
-								onChange={(event) => this.setState({[event.target.name]: event.target.value})}
-								disabled={this.state.isLoading}
-								required
-							/>
-						</Grid>
-						<Grid item xs={12}>
-							<TextField
-								fullWidth
-								type="text"
-								name="operator_name"
-								label="Operator Name"
-								variant="outlined"
-								value={this.state.operator_name}
-								onChange={(event) => this.setState({[event.target.name]: event.target.value})}
-								disabled={this.state.isLoading}
-								required
-							/>
-						</Grid>
-						<Grid item xs={12}>
-							<TextField
-								fullWidth
-								type="text"
-								name="branch_code"
-								label="Branch Code"
-								variant="outlined"
-								value={this.state.branch_code}
-								onChange={(event) => this.setState({[event.target.name]: event.target.value})}
-								disabled={this.state.isLoading}
-								required
-							/>
-						</Grid>
-						<Grid item xs={12}>
-							<TextField
-								fullWidth
-								type="text"
-								name="branch_name"
-								label="Branch Name"
-								variant="outlined"
-								value={this.state.branch_name}
-								onChange={(event) => this.setState({[event.target.name]: event.target.value})}
-								disabled={this.state.isLoading}
-								required
-							/>
-						</Grid>
-
 						<Grid item xs={12}>
 							<TextField
 								fullWidth
@@ -223,6 +134,7 @@ class DailyActivityForm extends React.Component {
 								required
 							/>
 						</Grid>
+
 						<Grid item xs={12}>
 							<TextField
 								fullWidth
@@ -238,9 +150,23 @@ class DailyActivityForm extends React.Component {
 						</Grid>
 
 						<Grid item xs={12}>
+							<TextField
+								fullWidth
+								type="number"
+								name="kyc_checks_done"
+								label="KYC Checks Done"
+								variant="outlined"
+								value={this.state.kyc_checks_done}
+								onChange={(event) => this.setState({[event.target.name]: event.target.value})}
+								disabled={this.state.isLoading}
+								required
+							/>
+						</Grid>
+
+						<Grid item xs={12}>
 							<LoadingButton
-								btnText={this.state.isUpdate ? "Update Issue" : "Submit Issue"}
-								loadingText={this.state.isUpdate ? "Updating Issue" : "Submitting Issue"}
+								btnText={this.state.isUpdate ? "Update KYC Check" : "Add KYC Check"}
+								loadingText={this.state.isUpdate ? "Updating KYC Check" : "Adding KYC Check"}
 								isLoading={this.state.isLoading}
 								color="secondary"
 								fullWidth

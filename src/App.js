@@ -9,6 +9,7 @@ import CustomerDataPage from "./pages/CustomerDataPage/CustomerDataPage";
 import MarketingActivityPage from "./pages/MarketingActivity/MarketingActivityPage";
 import DailyActivityPage from "./pages/DailyActivityPage/DailyActivityPage";
 import IssuePage from "./pages/IssuePage/IssuePage";
+import KYCChecksPage from "./pages/KYCChecksPage/KYCChecksPage";
 import ChangePasswordForm from "./pages/Login/ChangePasswordForm";
 import MenuAppBar from "./Components/MenuAppBar";
 import BottomNav from "./Components/BottomNav";
@@ -127,6 +128,11 @@ class App extends React.Component {
 							<Route
 								path="/issues"
 								render={(props) => <IssuePage state={this.state.state} user={this.state.user} {...props} />}></Route>
+							<Route
+								path="/kyc_checks"
+								render={(props) => (
+									<KYCChecksPage state={this.state.state} user={this.state.user} {...props} />
+								)}></Route>
 							<Route path="/app_issue" render={(props) => <ContactForm {...props} />}></Route>
 							<Route path="/change_password" render={(props) => <ChangePasswordForm {...props} />}></Route>
 							<Route
