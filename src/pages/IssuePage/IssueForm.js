@@ -58,6 +58,7 @@ class DailyActivityForm extends React.Component {
 				general_error: "You are currently offline. Please connect to the internet to perform this action.",
 				isLoading: false,
 			});
+			window.scrollTo(0,0);
 			return;
 		}
 
@@ -112,8 +113,8 @@ class DailyActivityForm extends React.Component {
 			self.setState({
 				operator_name: state_data.name,
 				operator_phone: state_data.phone,
-				branch_code: state_data.filter3,
-				branch_name: state_data.filter4,
+				branch_code: state_data.filter4,
+				branch_name: state_data.filter3,
 			});
 		}
 	}
@@ -150,7 +151,7 @@ class DailyActivityForm extends React.Component {
 									<MenuItem value={"Morpho Issue"}>Morpho Issue</MenuItem>
 									<MenuItem value={"Printer Issue"}>Printer Issue</MenuItem>
 									<MenuItem value={"Laptop/System Issue"}>Laptop/System Issue</MenuItem>
-									<MenuItem value={"Operator Sync Issue"}></MenuItem>
+									<MenuItem value={"Operator Sync Issue"}>Operator Sync Issue</MenuItem>
 									<MenuItem value={"Other Issue"}>Other Issue</MenuItem>
 								</Select>
 							</FormControl>

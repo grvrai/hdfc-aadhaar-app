@@ -54,12 +54,12 @@ export default function UserCard(props) {
             <Grid item xs={12} container spacing={1}>
                 <Grid item xs={2}></Grid>
                 <Grid item xs={5}>
-                    <Typography variant="caption" component="div" style={{lineHeight: 1.5}}>Employee Code</Typography>
-                    <Typography variant="body1" component="div" color="primary">{props.state.filter3}</Typography>
+                    <Typography variant="caption" component="div" style={{lineHeight: 1.5}}>Staff Code</Typography>
+                    <Typography variant="body1" component="div" color="primary">{props.state.xid}</Typography>
                 </Grid>
                 <Grid item xs={5}>
-                    <Typography variant="caption" component="div"  style={{lineHeight: 1.5}}>Branch</Typography>
-                    <Typography variant="body1" component="div" color="primary">{props.state.filter4}</Typography>
+                    <Typography variant="caption" component="div"  style={{lineHeight: 1.5}}>Branch Name</Typography>
+                    <Typography variant="body1" component="div" color="primary">{props.state.filter3}</Typography>
                 </Grid>
             </Grid>
         </Grid>

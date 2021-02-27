@@ -44,10 +44,10 @@ class LoginPage extends React.Component {
             <Route path={path} exact>
               <LoginForm onLoginSuccess={this.props.onLoginSuccess} />
             </Route>
-            <Route path={"/password_reset"} exact>
+            <Route path={"/passwordreset/"} exact>
               <PasswordResetRequestForm />
             </Route>
-            <Route path={"/password_reset/validate"} exact>
+            <Route path={"/passwordreset/validate"} exact>
               <PasswordResetConfirmForm />
             </Route>
           </Switch>
@@ -158,7 +158,7 @@ function LoginForm({ onLoginSuccess }) {
           <Button
             style={{ marginTop: "1rem" }}
             onClick={() => {
-              history.push("/password_reset/");
+              history.push("/passwordreset/");
             }}
             color="secondary"
             variant="text">
@@ -201,7 +201,7 @@ function PasswordResetRequestForm({}) {
         `${Constants.domain}/api/reset_password/request/`,
         {
           username: username,
-          redirect_url: `${Constants.domain}/s/d/aadhaar/password_reset/validate/`,
+          redirect_url: `${Constants.domain}/s/d/aadhaar/passwordreset/validate/`,
           send_sms: true,
         }
 	  );
@@ -340,7 +340,7 @@ function PasswordResetConfirmForm({}) {
         `${Constants.domain}/api/reset_password/confirm/`,
         {
           new_password: password,
-          token: getQueryParam("password_token"),
+          token: getQueryParam("passwordtoken"),
           //   send_sms: true,
         }
       );

@@ -2,6 +2,7 @@ import localforage from "localforage";
 import {setup} from "axios-cache-adapter";
 import AuthService from "./auth-service";
 import Constants from "./../constants";
+import App from './../App'
 
 const api = setup({
 	baseURL: Constants.aadhaar_domain,
@@ -52,6 +53,18 @@ api.interceptors.request.use(
 	},
 	(error) => {
 		Promise.reject(error);
+	}
+);
+
+api.interceptors.response.use(
+	(response) => {
+		return response;
+	},
+	(error) => {
+		if (error.response.status === 401) {
+			App.logout();
+		}
+		return error;
 	}
 );
 

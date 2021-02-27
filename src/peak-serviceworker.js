@@ -72,23 +72,7 @@ self.addEventListener("message", (event) => {
 	}
 });
 
-/*
-    Requirements
-    1. Register and handle Progressive Web App Criteria
-    2. Handle content caching, offline content, and refreshing asynchronously
-    3. Provide push registeration and notification handling
-*/
 
-// // Come up with a pass specific scheme to avoid collisions with other passes served from the same server.
-// var dataCacheName = "pass-data-v1";
-// var cacheName = "pass-cache-v1";
-// var OFFLINE_URL = "https://d3qu4ca2fqz9dn.cloudfront.net/peak_offline.html";
-// var filesToCache = [
-//   OFFLINE_URL,
-//   "https://staging.peakengage.com/s/d/aadhaar/",
-//   "https://s3-us-west-2.amazonaws.com/engagementservices-us-west-2/Resources/Default/main.css",
-//   "https://s3-us-west-2.amazonaws.com/engagementservices-us-west-2/Resources/Default/main.js",
-// ];
 var mLastPush = null;
 var constants = {};
 var PWA_SUPPORTED_BROWSERS = {
@@ -218,19 +202,19 @@ self.addEventListener("notificationclick", function (event) {
 				type: "window",
 			})
 			.then(async function (clientList) {
-				// console.log('On notification click: ', event.notification.tag);
+				console.log('On notification click: clientList');
 
-				let constants = getConstants();
+				var constants = getConstants();
 				var pwaSupported = isPwaSupported() && constants.a2hs;
 				var non_pwa_clients = [];
-				let notif = await getNotification(event.notification.tag);
-				let isCustomLink = notif && notif.link;
+				var notif = await getNotification(event.notification.tag);
+				var isCustomLink = notif && notif.link;
 				console.log(notif);
 
 				// Focus client if it is open in PWA mode.
 				if (pwaSupported) {
 					for (var i = 0; i < clientList.length; i++) {
-						var client = clientList[i];
+						let client = clientList[i];
 						if (client.url.indexOf("homescreen=1") != -1 && "focus" in client && !isCustomLink) {
 							return client.focus();
 						} else {
@@ -246,7 +230,7 @@ self.addEventListener("notificationclick", function (event) {
 					return non_pwa_clients[i].focus();
 				}
 
-				let url = isCustomLink ? notif.link : self.registration.scope;
+				var url = isCustomLink ? notif.link : self.registration.scope;
 
 				if (pwaSupported) url = url += "?homescreenn=1";
 
@@ -403,7 +387,7 @@ function getNotification(id) {
 	return localforage.getItem(NOTIF_DB).then((data) => {
 		if (!data) data = [];
 
-		for (j = 0; j < data.length; j++) {
+		for (var j = 0; j < data.length; j++) {
 			// console.log(data[j].id);
 			if (data[j].id == id) return data[j];
 		}

@@ -37,8 +37,10 @@ export default function MarketingActivityList({history, match}) {
 
 	useEffect(async () => {
 		setError(null);
+		let d = new Date();
+		d.setHours(0, 0, 0);
 		api
-			.get("/aadhaar/marketingactivity/")
+			.get(`/aadhaar/marketingactivity/?createdAt__gte=${d.toISOString()}`)
 			.then(function (data) {
 				setItems(data.data.results);
 			})
@@ -179,7 +181,7 @@ export default function MarketingActivityList({history, match}) {
 				<Grid container justify="center" alignItems="center" style={{padding: "2rem"}}>
 					<Box color="primary.contrastText">
 						<Typography variant="subtitle1" align="center">
-							You have not added any Marketing Activity yet.
+							You have not added any Marketing Activity for {new Date().toLocaleDateString()}.
 						</Typography>
 					</Box>
 				</Grid>

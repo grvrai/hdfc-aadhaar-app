@@ -52,6 +52,7 @@ class MarketingActivityForm extends React.Component {
 				general_error: "You are currently offline. Please connect to the internet to perform this action.",
 				isLoading: false,
 			});
+			window.scrollTo(0,0);
 			return;
 		}
 

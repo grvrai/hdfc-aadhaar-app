@@ -10,24 +10,23 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import LoadingButton from "./../../Components/LoadingButton";
+import LoadingButton from "../../Components/LoadingButton";
 import {withRouter} from "react-router-dom";
 import {withSnackbar} from "notistack";
-import FromContainer from "./../../Components/FormContainer";
+import FromContainer from "../../Components/FormContainer";
 
-import AuthService from "./../../services/auth-service";
-import {api} from "./../../services/customer-data-service";
+import AuthService from "../../services/auth-service";
+import {api} from "../../services/customer-data-service";
 
-class DailyActivityForm extends React.Component {
+class OtherActivityForm extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.handleSubmit = this.handleSubmit.bind(this);
 
 		this.state = {
-			supervisor_name: "",
-			supervisor_phone: "",
-			kyc_checks_done: 0,
+			title: "",
+			description: "",
 			isLoading: props.match.params.id ? true : false,
 		};
 
@@ -38,7 +37,7 @@ class DailyActivityForm extends React.Component {
 
 	async handleSubmit(e) {		
 		e.preventDefault();
-		console.log('handleSubmit - kyc')
+		console.log('handleSubmit - OtherActivities')
 
 		if (!window.navigator.onLine) {
 			this.setState({
@@ -56,12 +55,12 @@ class DailyActivityForm extends React.Component {
 
 		try {
 			if (this.state.isUpdate) {
-				await api.put(`/aadhaar/kycchecks/${this.props.match.params.id}/`, this.state);
+				await api.put(`/aadhaar/otheractivities/${this.props.match.params.id}/`, this.state);
 			} else {
-				await api.post(`/aadhaar/kycchecks/`, this.state);
+				await api.post(`/aadhaar/otheractivities/`, this.state);
 			}
 
-			this.props.enqueueSnackbar(`KYC Check ${this.state.isUpdate ? "Updated" : "Added"}`, {
+			this.props.enqueueSnackbar(`Other Activity ${this.state.isUpdate ? "Updated" : "Added"}`, {
 				variant: "success",
 			});
 
@@ -93,7 +92,7 @@ class DailyActivityForm extends React.Component {
 
 		if (this.props.match.params.id) {
 			try {
-				api.get(`/aadhaar/kycchecks/${this.props.match.params.id}/`).then(function (data) {
+				api.get(`/aadhaar/otheractivities/${this.props.match.params.id}/`).then(function (data) {
 					console.log(data.data)
 					self.setState(data.data);
 					self.setState({isLoading: false});
@@ -121,7 +120,7 @@ class DailyActivityForm extends React.Component {
 				<form autoComplete="off" onSubmit={this.handleSubmit}>
 					<Grid container spacing={3}>
 						<Grid item xs={12}>
-							<Typography variant="h5">{this.state.isUpdate ? "Update KYC Check" : "Submit KYC Check"}</Typography>
+							<Typography variant="h5">{this.state.isUpdate ? "Update Activity" : "Submit Activity"}</Typography>
 						</Grid>
 						{this.state.general_error ? (
 							<Grid item xs={12}>
@@ -134,10 +133,10 @@ class DailyActivityForm extends React.Component {
 							<TextField
 								fullWidth
 								type="text"
-								name="supervisor_name"
-								label="Supervisor Name"
+								name="title"
+								label="Activity Title"
 								variant="outlined"
-								value={this.state.supervisor_name}
+								value={this.state.title}
 								onChange={(event) => this.setState({[event.target.name]: event.target.value})}
 								disabled={this.state.isLoading}
 								required
@@ -147,25 +146,13 @@ class DailyActivityForm extends React.Component {
 						<Grid item xs={12}>
 							<TextField
 								fullWidth
-								type="number"
-								name="supervisor_phone"
-								label="Supervisor Phone"
+								type="text"
+								rows={4}
+								multiline
+								name="description"
+								label="Activity Description"
 								variant="outlined"
-								value={this.state.supervisor_phone}
-								onChange={(event) => this.setState({[event.target.name]: event.target.value})}
-								disabled={this.state.isLoading}
-								required
-							/>
-						</Grid>
-
-						<Grid item xs={12}>
-							<TextField
-								fullWidth
-								type="number"
-								name="kyc_checks_done"
-								label="KYC Checks Done"
-								variant="outlined"
-								value={this.state.kyc_checks_done}
+								value={this.state.description}
 								onChange={(event) => this.setState({[event.target.name]: event.target.value})}
 								disabled={this.state.isLoading}
 								required
@@ -174,8 +161,8 @@ class DailyActivityForm extends React.Component {
 
 						<Grid item xs={12}>
 							<LoadingButton
-								btnText={this.state.isUpdate ? "Update KYC Check" : "Add KYC Check"}
-								loadingText={this.state.isUpdate ? "Updating KYC Check" : "Adding KYC Check"}
+								btnText={this.state.isUpdate ? "Update Activity" : "Add Activity"}
+								loadingText={this.state.isUpdate ? "Updating Activity" : "Adding Activity"}
 								isLoading={this.state.isLoading}
 								color="secondary"
 								fullWidth
@@ -192,4 +179,4 @@ class DailyActivityForm extends React.Component {
 }
 
 // export default CustomerDataForm;
-export default withSnackbar(withRouter(DailyActivityForm));
+export default withSnackbar(withRouter(OtherActivityForm));

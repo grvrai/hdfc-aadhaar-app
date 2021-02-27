@@ -8,6 +8,7 @@ import NotificationContainer from "./pages/NotificationPage/NotificationContaine
 import CustomerDataPage from "./pages/CustomerDataPage/CustomerDataPage";
 import MarketingActivityPage from "./pages/MarketingActivity/MarketingActivityPage";
 import DailyActivityPage from "./pages/DailyActivityPage/DailyActivityPage";
+import OtherActivitiesPage from "./pages/OtherActivitiesPage/OtherActivitiesPage";
 import IssuePage from "./pages/IssuePage/IssuePage";
 import KYCChecksPage from "./pages/KYCChecksPage/KYCChecksPage";
 import ChangePasswordForm from "./pages/Login/ChangePasswordForm";
@@ -26,6 +27,7 @@ import {
 	Route,
 	useLocation,
 	withRouter,
+	Redirect,
 } from "react-router-dom";
 
 // import PrivateRoute from './routes/PrivateRoute'
@@ -33,6 +35,9 @@ import {
 
 import "./App.css";
 import ContactForm from "./pages/ContactPage/ContactForm";
+
+import {withConfirmationDialog} from "./Components/ConfirmationDialogProvider";
+import {CircularProgress, Grid} from "@material-ui/core";
 
 class App extends React.Component {
 	constructor(props) {
@@ -42,9 +47,8 @@ class App extends React.Component {
 			user: AuthService.getUserData(),
 			state: AuthService.getUserState(),
 			isLoggedIn: AuthService.isLoggedIn(),
+			isLoading: true,
 		};
-
-		// console.log(this.state)
 
 		this.login = this.login.bind(this);
 		this.logout = this.logout.bind(this);
@@ -52,10 +56,38 @@ class App extends React.Component {
 		PeakPwa.webapp.registerServiceWorker();
 	}
 
+	// confirmContext = ConfirmationDialogContext
+
 	componentDidMount() {
+		navigator.serviceWorker.oncontrollerchange = function () {
+			console.log("oncontrollerchange");
+			window.location.reload();
+		};
+		var self = this;
+		navigator.serviceWorker.ready.then(function (registration) {
+			console.log("swready");
+			registration.onupdatefound = function () {
+				console.log("onupdatefound");
+				self.props.context.openDialog({
+					title: "App Updated",
+					message: "The app has been updated, press the button below to reload",
+					btnConfirmText: "Reload",
+					btnDismissText: "Cancel",
+					actionCallback: function (response) {
+						if (!response) return;
+						console.log("calling skip waiting");
+						registration.waiting.postMessage({type: "SKIP_WAITING"});
+					},
+				});
+			};
+		});
+
 		document.addEventListener("PeakPwaInit", function () {
-			// console.log('PeakPwaInit');
+			console.log('PeakPwaInit');
 			//   if (!PeakPwa.webapp.installed) PeakPwa.subscribe();
+			self.setState({
+				isLoading: false
+			})
 		});
 
 		// if (this.state.isLoggedIn && this.state.state) {
@@ -88,14 +120,18 @@ class App extends React.Component {
 	}
 
 	render() {
-		// console.log(this.state);
+		if (this.state.isLoading) {
+			return (
+				<Grid container alignItems="center" justify="center" style={{padding: "2rem"}}>
+					<CircularProgress color="secondary" size={20} />
+				</Grid>
+			);
+		}
 		if (!this.state.isLoggedIn) {
 			return (
 				<Switch>
-					<Route
-						path="/"
-						// exact
-						render={(props) => <LoginPage onLoginSuccess={this.login} {...props} />}></Route>
+					<Route path="/" render={(props) => <LoginPage onLoginSuccess={this.login} {...props} />}></Route>
+					<Route render={() => <Redirect to="/" />} />
 				</Switch>
 			);
 		} else {
@@ -133,12 +169,18 @@ class App extends React.Component {
 								render={(props) => (
 									<KYCChecksPage state={this.state.state} user={this.state.user} {...props} />
 								)}></Route>
+							<Route
+								path="/other_activities"
+								render={(props) => (
+									<OtherActivitiesPage state={this.state.state} user={this.state.user} {...props} />
+								)}></Route>
 							<Route path="/app_issue" render={(props) => <ContactForm {...props} />}></Route>
 							<Route path="/change_password" render={(props) => <ChangePasswordForm {...props} />}></Route>
 							<Route
 								path="/"
 								exact
 								render={(props) => <HomeView state={this.state.state} user={this.state.user} {...props} />}></Route>
+							<Route render={() => <Redirect to="/" />} />
 						</Switch>
 					</Container>
 					<BottomNav />
@@ -158,4 +200,4 @@ function ScrollToTop() {
 	return null;
 }
 
-export default withRouter(App);
+export default withRouter(withConfirmationDialog(App));

@@ -55,6 +55,16 @@ export default function HomeActionsList() {
 				<ListItem
 					button
 					onClick={(e) => {
+						history.push("/other_activities");
+					}}>
+					<ListItemIcon>
+						<AssignmentIcon />
+					</ListItemIcon>
+					<ListItemText primary="Report Other Activity" />
+				</ListItem>
+				<ListItem
+					button
+					onClick={(e) => {
 						history.push("/issues");
 					}}>
 					<ListItemIcon>

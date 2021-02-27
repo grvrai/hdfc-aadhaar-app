@@ -47,12 +47,14 @@ class DailyActivityForm extends React.Component {
 
 	async handleSubmit(e) {
 		e.preventDefault();
-
+		console.log('handleSubmit')
+		console.log(window.navigator.onLine)
 		if (!window.navigator.onLine) {
 			this.setState({
 				general_error: "You are currently offline. Please connect to the internet to perform this action.",
 				isLoading: false,
 			});
+			window.scrollTo(0,0);
 			return;
 		}
 
@@ -84,13 +86,6 @@ class DailyActivityForm extends React.Component {
 			if (err.response && err.response.data) {
 				this.setState({formError: err.response.data});
 			}
-			// for (const key in err.response) {
-			// 	if (key == "non_field_errors" || key == "detail") {
-			// 		this.setState({
-			// 			general_error: err.response[key],
-			// 		});
-			// 	}
-			// }
 		}
 	}
 
@@ -122,6 +117,13 @@ class DailyActivityForm extends React.Component {
 								""
 							)}
 						</Grid>
+						{this.state.general_error ? (
+							<Grid item xs={12}>
+								<Alert severity="error">{this.state.general_error}</Alert>
+							</Grid>
+						) : (
+							""
+						)}
 						{formError && formError.non_field_errors ? (
 							<Grid item xs={12}>
 								<Alert severity="error">{formError.non_field_errors.join("\n")}</Alert>

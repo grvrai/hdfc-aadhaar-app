@@ -18,13 +18,13 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import IconButton from "@material-ui/core/IconButton";
-import PageHeader from "./../../Components/PageHeader";
-import {useConfirmationDialog} from "./../../Components/ConfirmationDialogProvider";
+import PageHeader from "../../Components/PageHeader";
+import {useConfirmationDialog} from "../../Components/ConfirmationDialogProvider";
 import {useSnackbar} from "notistack";
 
-import {api} from "./../../services/customer-data-service";
+import {api} from "../../services/customer-data-service";
 
-export default function KYCChecksList({history, match}) {
+export default function OtherActivitiesList({history, match}) {
 	const {path} = match;
 	const [items, setItems] = useState(null);
 	const [isUploading, setIsUploading] = useState(false);
@@ -38,7 +38,7 @@ export default function KYCChecksList({history, match}) {
 		let d = new Date();
 		d.setHours(0, 0, 0);
 		api
-			.get(`/aadhaar/kycchecks/?createdAt__gte=${d.toISOString()}`)
+			.get(`/aadhaar/otheractivities/?createdAt__gte=${d.toISOString()}`)
 			.then(function (data) {
 				setItems(data.data.results);
 			})
@@ -67,7 +67,7 @@ export default function KYCChecksList({history, match}) {
 		}
 
 		const confirmed = await getConfirmation({
-			title: "Delete KYC Check",
+			title: "Delete Activity",
 			message: "Are you sure you want to delete this item?",
 			btnConfirmText: "Delete",
 		});
@@ -84,33 +84,15 @@ export default function KYCChecksList({history, match}) {
 		);
 
 		try {
-			await api.delete(`/aadhaar/kycchecks/${id}/`);
+			await api.delete(`/aadhaar/otheractivities/${id}/`);
 			setItems((items) => items.filter((x) => x.id !== id));
 		} catch (err) {}
 	};
 
 	return (
 		<div>
-			<PageHeader icon={<ErrorIcon />} title={"KYC Checks"} />
+			<PageHeader icon={<ErrorIcon />} title={"Other Activities"} />
 
-			{/* {items && items.length > 0 && items.map(item => 
-                <Card key={item.id}>
-                    <Grid container style={{padding: '1rem'}} spacing={2}>
-                        <Grid item xs={7}>
-                            <Typography variant="overline" style={{lineHeight: 1}}>Issue</Typography>
-                            <Typography variant="body1" color="primary">{item.issue}</Typography>
-                        </Grid>
-                        <Grid item xs={5}>
-                            <Typography variant="overline" style={{lineHeight: 1}}>Reported On</Typography>
-                            <Typography variant="body2" color="primary">{new Date(item.createdAt).toLocaleDateString()}</Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Button startIcon={<EditIcon/>} color="default" onClick={(e) => {editItem(item.id)}}>Edit</Button>
-                            <Button startIcon={<DeleteIcon/>} color="default" onClick={(e) => {deleteItem(item.id)}}>Delete</Button>
-                        </Grid> 
-                    </Grid>
-                </Card>
-            )} */}
 			{items && items.length > 0 && (
 				<Box boxShadow={2} bgcolor="primary.contrastText">
 					<List>
@@ -120,18 +102,18 @@ export default function KYCChecksList({history, match}) {
 									<Grid container spacing={1} style={{marginBottom: 7}}>
 										<Grid item xs={12}>
 											<Typography variant="overline" style={{lineHeight: 1}}>
-												Supervisor Name
+												Activity Title
 											</Typography>
 											<Typography variant="subtitle1" color="primary" >
-												{item.supervisor_name}
+												{item.title}
 											</Typography>
 										</Grid>
-										<Grid item xs={12} style={{display:'flex', alignItems: 'center'}}>
-											<Typography variant="overline" style={{lineHeight: 1, marginRight: 10}}>
-												Checks
+										<Grid item xs={12}>
+											<Typography variant="overline" style={{lineHeight: 1}}>
+												Activity Description
 											</Typography>
 											<Typography variant="subtitle1" color="primary" >
-												{item.kyc_checks_done}
+												{item.description}
 											</Typography>
 										</Grid>
 									</Grid>
@@ -201,7 +183,7 @@ export default function KYCChecksList({history, match}) {
 				<Grid container justify="center" alignItems="center" style={{padding: "2rem"}}>
 					<Box color="primary.contrastText">
 						<Typography variant="subtitle1" align="center" color="inherit">
-							You have not reported any KYC checks for {new Date().toLocaleDateString()}.
+							You have not reported any activities for {new Date().toLocaleDateString()}.
 						</Typography>
 					</Box>
 				</Grid>
@@ -216,7 +198,7 @@ export default function KYCChecksList({history, match}) {
 				}}
 				style={{position: "fixed", bottom: "72px", right: "16px"}}>
 				<AddIcon />
-				Add KYC Check
+				Add New Activity
 			</Fab>
 			{/* <Button variant="contained" color="primary" onClick={() => {history.push(path + '/add')}}>Add New</Button> */}
 		</div>

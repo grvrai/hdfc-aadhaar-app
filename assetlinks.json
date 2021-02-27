@@ -1,0 +1,53 @@
+[
+	{
+		"relation": ["delegate_permission/common.handle_all_urls"],
+		"target": {
+			"namespace": "android_app",
+			"package_name": "com.peakengage.POS",
+			"sha256_cert_fingerprints": [
+				"5B:8A:97:B1:D8:92:BA:A0:18:00:59:FD:2C:1B:B6:A7:59:EA:E1:45:B9:36:E4:C1:13:49:73:67:5B:21:05:84"
+			]
+		}
+	},
+	{
+		"relation": ["delegate_permission/common.handle_all_urls"],
+		"target": {
+			"namespace": "android_app",
+			"package_name": "com.peakengage.peakpos",
+			"sha256_cert_fingerprints": [
+				"B6:68:20:3C:E1:26:CC:1D:AD:FC:D1:7C:52:79:70:D1:CC:0F:D8:A3:18:5B:02:9E:56:20:46:78:77:8C:CA:EA"
+			]
+		}
+	},
+	{
+		"relation": ["delegate_permission/common.handle_all_urls"],
+		"target": {
+			"namespace": "android_app",
+			"package_name": "com.peakengage.staging.twa",
+			"sha256_cert_fingerprints": [
+				"C0:E8:6F:37:BF:F4:2A:37:98:05:70:BE:9A:1C:01:BC:EE:1A:CF:24:52:D6:B1:BE:21:2B:F2:31:CD:CB:D8:4E"
+			]
+		}
+	},
+	{
+		"relation": ["delegate_permission/common.handle_all_urls"],
+		"target": {
+			"namespace": "android_app",
+			"package_name": "com.peakengage.staging.twa",
+			"sha256_cert_fingerprints": [
+				"B9:C0:C3:96:0E:07:93:47:B9:20:C0:AA:A5:14:31:57:62:9F:18:72:59:3D:55:EC:59:DA:15:BB:55:02:BF:39"
+			]
+		}
+	},
+
+	{
+		"relation": ["delegate_permission/common.handle_all_urls"],
+		"target": {
+			"namespace": "android_app",
+			"package_name": "com.peakengage.ask.twa",
+			"sha256_cert_fingerprints": [
+				"B9:C0:C3:96:0E:07:93:47:B9:20:C0:AA:A5:14:31:57:62:9F:18:72:59:3D:55:EC:59:DA:15:BB:55:02:BF:39"
+			]
+		}
+	}
+]

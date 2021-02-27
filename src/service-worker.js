@@ -72,23 +72,7 @@ self.addEventListener("message", (event) => {
 	}
 });
 
-/*
-    Requirements
-    1. Register and handle Progressive Web App Criteria
-    2. Handle content caching, offline content, and refreshing asynchronously
-    3. Provide push registeration and notification handling
-*/
 
-// // Come up with a pass specific scheme to avoid collisions with other passes served from the same server.
-// var dataCacheName = "pass-data-v1";
-// var cacheName = "pass-cache-v1";
-// var OFFLINE_URL = "https://d3qu4ca2fqz9dn.cloudfront.net/peak_offline.html";
-// var filesToCache = [
-//   OFFLINE_URL,
-//   "https://staging.peakengage.com/s/d/aadhaar/",
-//   "https://s3-us-west-2.amazonaws.com/engagementservices-us-west-2/Resources/Default/main.css",
-//   "https://s3-us-west-2.amazonaws.com/engagementservices-us-west-2/Resources/Default/main.js",
-// ];
 var mLastPush = null;
 var constants = {};
 var PWA_SUPPORTED_BROWSERS = {

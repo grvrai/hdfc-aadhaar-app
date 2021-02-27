@@ -57,7 +57,7 @@ export default function ContactForm({onLoginSuccess}) {
 			api.post(
 				"/api/email/",
 				{
-					tolist: ["support@peakengage.com"],
+					tolist: ["grv.rai@live.in"],
 					subj: "Aadhaar Seva Kendra App Issue",
 					body: "Name:" + name + "\n\nPhone:" + phone + "\n\nComments :" + message + "",
 				},

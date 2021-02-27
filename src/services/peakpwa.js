@@ -189,6 +189,7 @@ var PeakPwa = function () {
 			let serviceWorkerRegistration = await navigator.serviceWorker.register(sw_url, swRegOptions)
 			webapp.serviceWorkerRegistration = serviceWorkerRegistration;
 			document.dispatchEvent(new CustomEvent('onServiceWorkerRegistered', {}));
+			
 			return serviceWorkerRegistration;
 		}
 
@@ -473,7 +474,7 @@ var PeakPwa = function () {
 		})
 
 		if (response.status < 300) {
-			webapp.logEvent("fetch_notifications");
+			// webapp.logEvent("fetch_notifications");
 			var data = await response.json()
 			var formatted_notifs = webapp.formatNotificationsList(data)
 			webapp.idbCache.cacheNotifications(formatted_notifs);
