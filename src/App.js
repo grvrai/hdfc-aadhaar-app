@@ -47,7 +47,7 @@ class App extends React.Component {
 			user: AuthService.getUserData(),
 			state: AuthService.getUserState(),
 			isLoggedIn: AuthService.isLoggedIn(),
-			isLoading: true,
+			isLoading: process.env.NODE_ENV != "development",
 		};
 
 		this.login = this.login.bind(this);
