@@ -119,7 +119,7 @@ function LoginForm({ onLoginSuccess }) {
           <TextField
             fullWidth
             name="username"
-            label="Phone No/Email"
+            label="Phone No"
             variant="outlined"
             value={username}
             onChange={(event) => {
@@ -265,7 +265,7 @@ function PasswordResetRequestForm({}) {
               <TextField
                 fullWidth
                 name="username"
-                label="Phone No/Email"
+                label="Phone No"
                 variant="outlined"
                 value={username}
                 onChange={(event) => setUsername(event.target.value)}
