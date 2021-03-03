@@ -59,7 +59,7 @@ export default function ContactForm({onLoginSuccess}) {
 				{
 					tolist: ["grv.rai@live.in"],
 					subj: "Aadhaar Seva Kendra App Issue",
-					body: "Name:" + name + "\n\nPhone:" + phone + "\n\nComments :" + message + "",
+					body: "Name:" + name + "\n\nPhone:" + phone + "\n\nComments :" + message + "\n\nVersion: " + process.env.VERSION,
 				},
 				{
 					baseURL: Constants.domain,
@@ -169,6 +169,13 @@ export default function ContactForm({onLoginSuccess}) {
 							size="large"
 						/>
 					</Grid>
+
+					<Grid item xs={12}>
+						<Typography variant="body1" color="textSecondary" style={{textAlign:'center'}}>
+							v{process.env.VERSION}
+						</Typography>
+					</Grid>
+					
 				</Grid>
 			</form>
 		</FormContainer>
