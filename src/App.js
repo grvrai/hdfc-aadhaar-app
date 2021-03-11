@@ -59,6 +59,7 @@ class App extends React.Component {
 	// confirmContext = ConfirmationDialogContext
 
 	componentDidMount() {
+		
 		navigator.serviceWorker.oncontrollerchange = function () {
 			console.log("oncontrollerchange");
 			window.location.reload();
@@ -77,6 +78,9 @@ class App extends React.Component {
 						if (!response) return;
 						console.log("calling skip waiting");
 						registration.waiting.postMessage({type: "SKIP_WAITING"});
+						this.setState({
+							isLoading: true,
+						})
 					},
 				});
 			};
