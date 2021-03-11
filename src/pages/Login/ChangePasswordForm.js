@@ -74,14 +74,14 @@ export default function ChangePasswordForm({}) {
       setState({
         isLoading: false,
       });
-      for (const key in err.response) {
+      for (const key in err.response.data) {
         // setState({
-        // 	general_error: err.response[key],
+        // 	general_error: err.response.data[key],
         // 	isLoading: false,
         // });
         if (key == "non_field_errors" || key == "detail") {
           setState({
-            general_error: err.response[key],
+            general_error: err.response.data[key],
             isLoading: false,
           });
         }
@@ -158,7 +158,7 @@ export default function ChangePasswordForm({}) {
                 error={Boolean(formError.new_password)}
                 helperText={
                   formError.new_password
-                    ? formError.new_password.join("\r\n")
+                    ? formError.new_password.join("\n")
                     : ""
                 }
                 required

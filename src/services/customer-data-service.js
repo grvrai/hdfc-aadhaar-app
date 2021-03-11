@@ -52,7 +52,7 @@ api.interceptors.request.use(
 		return config;
 	},
 	(error) => {
-		Promise.reject(error);
+		return Promise.reject(error);
 	}
 );
 
@@ -64,7 +64,7 @@ api.interceptors.response.use(
 		if (error.response.status === 401) {
 			App.logout();
 		}
-		return error;
+		return Promise.reject(error);
 	}
 );
 

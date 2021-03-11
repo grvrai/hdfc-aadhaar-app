@@ -97,7 +97,7 @@ function LoginForm({ onLoginSuccess }) {
       for (const key in err.response) {
         if (key == "non_field_errors" || key == "detail") {
           setState({
-            general_error: err.response[key],
+            general_error: err.response.data[key],
           });
         }
       }
@@ -119,7 +119,7 @@ function LoginForm({ onLoginSuccess }) {
           <TextField
             fullWidth
             name="username"
-            label="Phone No"
+            label="Phone No (10-digit)"
             variant="outlined"
             value={username}
             onChange={(event) => {
@@ -215,7 +215,7 @@ function PasswordResetRequestForm({}) {
       for (const key in err.response) {
         if (key == "non_field_errors" || key == "detail") {
           setState({
-            general_error: err.response[key],
+            general_error: err.response.data[key],
           });
         }
       }
@@ -248,8 +248,7 @@ function PasswordResetRequestForm({}) {
             <Grid item xs={12}>
               <Box textAlign="left">
                 <Typography variant="body1" color="textSecondary">
-                  Enter your phone or email address below to receive a password
-                  reset link.
+                  Enter your phone number (10-digit) below to receive a password reset link.
                 </Typography>
               </Box>
             </Grid>
@@ -265,7 +264,7 @@ function PasswordResetRequestForm({}) {
               <TextField
                 fullWidth
                 name="username"
-                label="Phone No"
+                label="Phone No (10-digit)"
                 variant="outlined"
                 value={username}
                 onChange={(event) => setUsername(event.target.value)}
@@ -304,13 +303,14 @@ function PasswordResetRequestForm({}) {
 function PasswordResetConfirmForm({}) {
   let history = useHistory();
   const [isSuccess, setSuccess] = React.useState(null);
+	const [formError, setFormError] = React.useState({});
   const [state, setState] = React.useState({
     general_error: "",
     isLoading: false,
   });
 
-  const [password, setPassword] = React.useState("");
-  const [password2, setPassword2] = React.useState("");
+  const [new_password, setPassword] = React.useState("");
+  const [new_password2, setPassword2] = React.useState("");
 
   const handleSubmit = async function (e) {
     e.preventDefault();
@@ -322,7 +322,7 @@ function PasswordResetConfirmForm({}) {
       });
       return;
     }
-    if (password !== password2) {
+    if (new_password !== new_password2) {
       setState({
         general_error: "The 2 enetered passwords do not match.",
         isLoading: false,
@@ -339,7 +339,7 @@ function PasswordResetConfirmForm({}) {
         "POST",
         `${Constants.domain}/api/reset_password/confirm/`,
         {
-          new_password: password,
+          new_password: new_password,
           token: getQueryParam("passwordtoken"),
           //   send_sms: true,
         }
@@ -349,10 +349,14 @@ function PasswordResetConfirmForm({}) {
       // onLoginSuccess(user_data, state_data);
     } catch (err) {
       console.log(err);
+			setFormError(err.response);
+      setState({
+        isLoading: false,
+      });
       for (const key in err.response) {
         if (key == "non_field_errors" || key == "detail") {
           setState({
-            general_error: err.response[key],
+            general_error: err.response.data[key],
             isLoading: false,
           });
         }
@@ -400,26 +404,38 @@ function PasswordResetConfirmForm({}) {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                name="password"
+                name="new_password"
                 label="Password"
                 variant="outlined"
                 type="password"
-                value={password}
+                value={new_password}
                 onChange={(event) => setPassword(event.target.value)}
                 disabled={state.isLoading}
+								error={Boolean(formError.new_password)}
+                helperText={
+                  formError.new_password
+                    ? formError.new_password.join("\r\n")
+                    : ""
+                }
                 required
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                name="password2"
+                name="new_password2"
                 type="password"
                 label="Repeat Password"
                 variant="outlined"
-                value={password2}
+                value={new_password2}
                 onChange={(event) => setPassword2(event.target.value)}
                 disabled={state.isLoading}
+								error={Boolean(formError.new_password2)}
+                helperText={
+                  formError.new_password2
+                    ? formError.new_password2.join("\r\n")
+                    : ""
+                }
                 required
               />
             </Grid>

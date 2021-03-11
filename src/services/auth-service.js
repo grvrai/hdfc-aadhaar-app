@@ -21,6 +21,7 @@ class AuthService {
 	async auth(username, password) {
 		let headers = new Headers();
 		headers.set("Authorization", "Basic " + btoa(username + ":" + password));
+		headers.set("Content-Type", "application/json");
 		let user_data = await fetchData("POST", `${Constants.domain}/api/login/`, {}, headers);
 		Constants.token = user_data.token;
 		let state_list = await fetchData(
@@ -97,3 +98,5 @@ class AuthService {
 }
 
 export default new AuthService();
+
+

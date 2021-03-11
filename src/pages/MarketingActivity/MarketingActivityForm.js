@@ -63,16 +63,17 @@ class MarketingActivityForm extends React.Component {
 
 		try {
 			if (this.state.isUpdate) {
-				await api.put(`/aadhaar/marketingactivity/${this.props.match.params.id}/`, this.state);
+				var resp = await api.put(`/aadhaar/marketingactivity/${this.props.match.params.id}/`, this.state);
 			} else {
-				await api.post(`/aadhaar/marketingactivity/`, this.state);
+				resp = await api.post(`/aadhaar/marketingactivity/`, this.state);
 			}
 
 			this.props.enqueueSnackbar(`Marketing Activity ${this.state.isUpdate ? "Updated" : "Created"}`, {
 				variant: "success",
 			});
 
-			this.props.history.goBack();
+			// this.props.history.goBack();
+			console.log(resp)
 		} catch (err) {
 			this.setState({
 				isLoading: false,

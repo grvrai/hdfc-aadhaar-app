@@ -55,11 +55,11 @@ export default function ContactForm({onLoginSuccess}) {
 
 		try {
 			api.post(
-				"/api/email/",
+				"/api/contact/",
 				{
-					tolist: ["grv.rai@live.in"],
-					subj: "Aadhaar Seva Kendra App Issue",
-					body: "Name:" + name + "\n\nPhone:" + phone + "\n\nComments :" + message + "\n\nVersion: " + process.env.VERSION,
+					title: "Aadhaar Seva Kendra App Issue",
+					message: "Name: " + name + "\n\nPhone: " + phone + "\n\nComments: " + message + "\n\nVersion: " + process.env.VERSION,
+					type: "Aadhaar App Issue"
 				},
 				{
 					baseURL: Constants.domain,
@@ -74,10 +74,10 @@ export default function ContactForm({onLoginSuccess}) {
 			console.log(err);
 			setState({isLoading: false});
 
-			for (const key in err.response) {
+			for (const key in err.response.data) {
 				if (key == "non_field_errors" || key == "detail") {
 					setState({
-						general_error: err.response[key],
+						general_error: err.response.data[key],
 					});
 				}
 			}

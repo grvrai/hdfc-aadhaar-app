@@ -71,10 +71,10 @@ class DailyActivityForm extends React.Component {
 			this.setState({
 				isLoading: false,
 			});
-			for (const key in err.response) {
+			for (const key in err.response.data) {
 				if (key == "non_field_errors" || key == "detail") {
 					this.setState({
-						general_error: err.response[key],
+						general_error: err.response.data[key],
 					});
 				}
 			}

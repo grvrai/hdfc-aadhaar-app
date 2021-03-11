@@ -69,25 +69,26 @@ class DailyActivityForm extends React.Component {
 
 		try {
 			if (this.state.isUpdate) {
-				await api.put(`/aadhaar/technicalissue/${this.props.match.params.id}/`, this.state);
+				var resp = await api.put(`/aadhaar/technicalissue/${this.props.match.params.id}/`, this.state);
 			} else {
-				await api.post(`/aadhaar/technicalissue/`, this.state);
+				resp = await api.post(`/aadhaar/technicalissue/`, this.state);
 			}
 
 			this.props.enqueueSnackbar(`Technical Issue ${this.state.isUpdate ? "Updated" : "Reported"}`, {
 				variant: "success",
 			});
 
-			this.props.history.goBack();
+			// this.props.history.goBack();
+			console.log(resp)
 		} catch (err) {
 			console.log(err);
 			this.setState({
 				isLoading: false,
 			});
-			for (const key in err.response) {
+			for (const key in err.response.data) {
 				if (key == "non_field_errors" || key == "detail") {
 					this.setState({
-						general_error: err.response[key],
+						general_error: err.response.data[key],
 					});
 				}
 			}
