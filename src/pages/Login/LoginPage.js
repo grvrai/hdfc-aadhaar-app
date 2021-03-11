@@ -413,9 +413,20 @@ function PasswordResetConfirmForm({}) {
                 disabled={state.isLoading}
 								error={Boolean(formError.new_password)}
                 helperText={
-                  formError.new_password
-                    ? formError.new_password.join("\r\n")
-                    : ""
+                  formError.new_password ? (
+										<div>
+											{formError.new_password.map((err, i) => (
+												<div key={i}>{err}</div>
+											))}
+										</div>
+									) : (
+										<div>
+											<div>Your password can't be too similar to your other personal information.</div>
+											<div>Your password must contain at least 8 characters.</div>
+											<div>Your password can't be a commonly used password.</div>
+											<div>Your password can't be entirely numeric.</div>
+										</div>
+									)
                 }
                 required
               />

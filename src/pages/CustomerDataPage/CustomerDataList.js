@@ -13,7 +13,7 @@ import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import DoneIcon from "@material-ui/icons/Done";
-import ErrorIcon from '@material-ui/icons/Error';
+import ErrorIcon from "@material-ui/icons/Error";
 import Select from "@material-ui/core/Select";
 import PageHeader from "./../../Components/PageHeader";
 
@@ -31,7 +31,7 @@ import Avatar from "@material-ui/core/Avatar";
 import FormContainer from "./../../Components/FormContainer";
 
 import AadharDataService from "./../../services/customer-data-service";
-import { useSnackbar } from "notistack";
+import {useSnackbar} from "notistack";
 
 export default function CustomerDataList({history, match}) {
 	const {path} = match;
@@ -42,7 +42,7 @@ export default function CustomerDataList({history, match}) {
 	const [error, setError] = useState(null);
 
 	const {getConfirmation} = useConfirmationDialog();
-	const {enqueueSnackbar, closeSnackbar} = useSnackbar()
+	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
 	let dateOptions = [];
 	let current_date = new Date();
@@ -94,7 +94,8 @@ export default function CustomerDataList({history, match}) {
 		history.push(path + "/edit/" + id);
 	};
 
-	const deleteItem = async (id) => {
+	const deleteItem = async (customerData) => {
+		const id = customerData.id;
 		const confirmed = await getConfirmation({
 			title: "Delete Customer Record",
 			message: "Are you sure you want to delete this Customer Record?",
@@ -112,7 +113,12 @@ export default function CustomerDataList({history, match}) {
 			})
 		);
 		// this.props.history.push(path + '/' + id)
-		await AadharDataService.deleteRecordFromCache(id);
+		if (customerData.unsynced) {
+			await AadharDataService.deleteRecordFromCache(id);
+		} else {
+			await AadharDataService.deleteCustomerRecord(id);
+		}
+
 		setItems((items) => items.filter((x) => x.id !== id));
 	};
 
@@ -128,6 +134,15 @@ export default function CustomerDataList({history, match}) {
 		loadList().then(function () {
 			setIsUploading(false);
 		});
+	};
+
+	const isToday = (someDate) => {
+		const today = new Date();
+		return (
+			someDate.getDate() == today.getDate() &&
+			someDate.getMonth() == today.getMonth() &&
+			someDate.getFullYear() == today.getFullYear()
+		);
 	};
 
 	// items = syncedItems.push(unSyncedItems);
@@ -183,13 +198,13 @@ export default function CustomerDataList({history, match}) {
 									<Typography variant="caption">{customerData.service_availed}</Typography>
 								</Box>
 
-								{customerData.unsynced ? (
+								{isToday(new Date(customerData.createdAt)) ? (
 									<ListItemSecondaryAction>
 										<IconButton
 											edge="end"
 											aria-label="delete"
 											onClick={(e) => {
-												deleteItem(customerData.id);
+												deleteItem(customerData);
 											}}>
 											<DeleteIcon />
 										</IconButton>
@@ -218,7 +233,7 @@ export default function CustomerDataList({history, match}) {
 			{error && (
 				<Grid container justify="center" alignItems="center" style={{padding: "2rem"}}>
 					<Box color="primary.contrastText">
-						<ErrorIcon/>
+						<ErrorIcon />
 						<Typography variant="subtitle1" align="center">
 							{error.message == "Network Error"
 								? "There was a network error in fetching your data. Please check your network and try again"
@@ -236,7 +251,7 @@ export default function CustomerDataList({history, match}) {
 					<CircularProgress color="secondary" size={20} />
 				</Grid>
 			)}
-			
+
 			{items && !items.length && !error && (
 				<Grid container justify="center" alignItems="center" style={{padding: "2rem"}}>
 					<Box color="primary.contrastText">

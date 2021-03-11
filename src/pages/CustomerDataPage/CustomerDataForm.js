@@ -40,8 +40,6 @@ class CustomerDataForm extends React.Component {
 			// this.state = AadharDataService.get
 			this.state.isUpdate = true;
 		}
-
-		
 	}
 
 	async handleSubmit(e) {
@@ -54,21 +52,21 @@ class CustomerDataForm extends React.Component {
 
 		try {
 			if (this.state.isUpdate) {
-				if(window.navigator.onLine && this.props.match.params.id < 1000000000) {
+				if (window.navigator.onLine && this.props.match.params.id < 1000000000) {
 					await AadharDataService.updateCustomerRecord(this.props.match.params.id, this.state);
 				} else {
 					await AadharDataService.updateRecordInCache(this.props.match.params.id, this.state);
-				}				
+				}
 				this.props.enqueueSnackbar("Customer Record Updated", {
 					variant: "success",
 				});
 			} else {
-				if(window.navigator.onLine) {
+				if (window.navigator.onLine) {
 					await AadharDataService.addCustomerRecord(this.state);
 				} else {
 					await AadharDataService.addRecordToCache(this.state);
 				}
-				
+
 				this.props.enqueueSnackbar("Customer Record Added", {
 					variant: "success",
 				});
@@ -93,13 +91,20 @@ class CustomerDataForm extends React.Component {
 	componentDidMount() {
 		console.log(this.props.match.params.id);
 		if (this.props.match.params.id) {
-			let self = this;
-			// this.state = AadharDataService.get
-			// this.state.isUpdate = true
-			AadharDataService.getUnsyncedRecord(this.props.match.params.id).then(function (customer_data) {
-				self.setState(customer_data);
-			});
+			this.popRecord(this.props.match.params.id);
 		}
+	}
+
+	async popRecord(id) {
+		let self = this;
+		let customer_data = await AadharDataService.getUnsyncedRecord(id);
+		self.setState(customer_data);
+		console.log(customer_data)
+		if (!customer_data) {
+			let resp = await AadharDataService.getCustomerRecord(id);
+			self.setState(resp.data);
+		}
+		
 	}
 
 	render() {

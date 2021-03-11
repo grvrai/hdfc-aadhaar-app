@@ -82,11 +82,19 @@ class AadharDataService {
 	async addCustomerRecord(customer_data) {
 		let current_time = new Date().toISOString();
 		customer_data.reportedAt = current_time;
-		await api.post("/aadhaar/customerdata/", customer_data);
+		return api.post("/aadhaar/customerdata/", customer_data);
+	}
+
+	async getCustomerRecord(id) {
+		return api.get("/aadhaar/customerdata/"+ id  + "/");
+	}
+
+	async deleteCustomerRecord(id) {
+		return api.delete("/aadhaar/customerdata/"+ id  + "/");
 	}
 
 	async updateCustomerRecord(id, customer_data) {
-		await api.post("/aadhaar/customerdata/" + id, customer_data);
+		return api.put("/aadhaar/customerdata/" + id  + "/", customer_data);
 	}
 
 	async addRecordToCache(customer_data) {
